@@ -14,31 +14,27 @@ namespace Monte_Karlo
     }
     public class Calculator
     {
-        // Аналитический расчет площади сегмента
-        public static double CalculateAnalyticArea(double x0, double y0, double R, Direction direction,
-            double C, double steps = 100000000)
+        // расчет площади сегмента через интеграл
+        public static double CalculateIntegralArea(double x0, double y0, double R, Direction direction,
+            double C, double steps = 100000)
         {
             double sum = 0;
             if (direction == Direction.horizontal)
             {
-                double yLine = C;
                 double start = y0 - R, end = y0 + R;
                 if (C <= y0)
                     start = C;
                 else
                     end = C;
-                double stepSize = (end - start) / steps;
                 sum = GetIntegral(start, end, (t) => 2 * Math.Sqrt(Math.Pow(R, 2) - Math.Pow(t - y0, 2)));
             }
             else if (direction == Direction.vertical)
             {
-                double xLine = C;
                 double start = x0 - R, end = x0 + R;
                 if (C <= x0)
                     start = C;
                 else
                     end = C;
-                double stepSize = (end - start) / steps;
                 sum = GetIntegral(start, end, (t) => 2 * Math.Sqrt(Math.Pow(R, 2) - Math.Pow(t - x0, 2)));
             }
             return sum;
@@ -50,7 +46,7 @@ namespace Monte_Karlo
         public static double CalculateMonteCarloArea(double x0, double y0, double R, Direction direction, double C, int iterations)
         {
             throw new NotImplementedException();
-            Random rand = new Random();
+/*            Random rand = new Random();
             int hits = 0;
             double xMin = x0 - R, xMax = x0 + R;
             double yMin = y0 - R, yMax = y0 + R;
@@ -73,7 +69,7 @@ namespace Monte_Karlo
             }
 
             double boundingArea = (xMax - xMin) * (yMax - yMin);
-            return boundingArea * hits / iterations;
+            return boundingArea * hits / iterations;*/
         }
 
         public static double GetIntegral(double start, double end, Func<double, double> func, double steps = 10000)
