@@ -115,6 +115,17 @@ namespace Monte_Karlo
             GenerateRandomPoints();
         }
 
+        private void horizontalCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (direction == Direction.horizontal)
+                direction = Direction.vertical;
+            else
+                direction = Direction.horizontal;
+
+            SetCTrackBarBorders();
+            GenerateRandomPoints();
+        }
+
         private async Task GenerateRandomPoints()
         {
             if (this.Visible != true)
@@ -170,17 +181,6 @@ namespace Monte_Karlo
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
-        }
-
-        private void horizontalCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (direction == Direction.horizontal)
-                direction = Direction.vertical;
-            else
-                direction = Direction.horizontal;
-
-            SetCTrackBarBorders();
-            paintPanel.Invalidate();
         }
 
         private void programHelpToolStripMenuItem_Click(object sender, EventArgs e)

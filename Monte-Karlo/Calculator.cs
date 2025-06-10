@@ -51,8 +51,6 @@ namespace Monte_Karlo
             return sum;
         }
 
-        public static double CircleSuare(double R) => Math.PI * R * R;
-
         public static double CalculateAnalyticArea(Point Center, double R, Direction direction, double C)
         {
             if (R == 0)
@@ -97,6 +95,8 @@ namespace Monte_Karlo
         {
             return R * R * Math.Acos(d / R) - d * Math.Sqrt(R * R - d * d);
         }
+
+        public static double CircleSuare(double R) => Math.PI * R * R;
 
         public static double CalculateMonteCarloArea(float radius)
         {

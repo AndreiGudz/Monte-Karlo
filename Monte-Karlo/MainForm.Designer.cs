@@ -192,7 +192,7 @@
             scaleTrackBar.AutoSize = false;
             scaleTrackBar.Location = new Point(4, 51);
             scaleTrackBar.Margin = new Padding(4);
-            scaleTrackBar.Maximum = 120;
+            scaleTrackBar.Maximum = 150;
             scaleTrackBar.Minimum = 10;
             scaleTrackBar.Name = "scaleTrackBar";
             scaleTrackBar.Size = new Size(351, 84);
