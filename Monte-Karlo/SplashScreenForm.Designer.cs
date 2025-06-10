@@ -1,6 +1,6 @@
 ﻿namespace Monte_Karlo
 {
-    partial class Screensaver
+    partial class SplashScreenForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,8 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Screensaver));
-            button1 = new Button();
+            components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SplashScreenForm));
+            startButton = new Button();
             pictureBox1 = new PictureBox();
             authorLabel = new Label();
             panel1 = new Panel();
@@ -39,21 +40,22 @@
             label4 = new Label();
             label5 = new Label();
             label6 = new Label();
+            timer1 = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
-            // button1
+            // startButton
             // 
-            button1.BackColor = Color.FromArgb(174, 206, 180);
-            button1.Font = new Font("Segoe UI", 14F);
-            button1.Location = new Point(12, 470);
-            button1.Name = "button1";
-            button1.Size = new Size(492, 84);
-            button1.TabIndex = 5;
-            button1.Text = "Перейти к программе";
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += button1_Click;
+            startButton.BackColor = Color.FromArgb(174, 206, 180);
+            startButton.Font = new Font("Segoe UI", 14F);
+            startButton.Location = new Point(10, 470);
+            startButton.Name = "startButton";
+            startButton.Size = new Size(492, 84);
+            startButton.TabIndex = 5;
+            startButton.Text = "Перейти к программе";
+            startButton.UseVisualStyleBackColor = false;
+            startButton.Click += startButton_Click;
             // 
             // pictureBox1
             // 
@@ -91,9 +93,9 @@
             label1.Font = new Font("Segoe UI", 14F);
             label1.Location = new Point(12, 33);
             label1.Name = "label1";
-            label1.Size = new Size(145, 45);
+            label1.Size = new Size(364, 45);
             label1.TabIndex = 9;
-            label1.Text = "Данные:";
+            label1.Text = "Данные в варианте 25:";
             // 
             // label2
             // 
@@ -145,7 +147,12 @@
             label6.TabIndex = 14;
             label6.Text = "C: 2";
             // 
-            // Screensaver
+            // timer1
+            // 
+            timer1.Interval = 1000;
+            timer1.Tick += timer1_Tick;
+            // 
+            // SplashScreenForm
             // 
             AutoScaleDimensions = new SizeF(12F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -158,12 +165,13 @@
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(panel1);
-            Controls.Add(button1);
+            Controls.Add(startButton);
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "Screensaver";
+            Name = "SplashScreenForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Заставка";
+            Load += Screensaver_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -172,7 +180,7 @@
         }
 
         #endregion
-        private Button button1;
+        private Button startButton;
         private PictureBox pictureBox1;
         private Label authorLabel;
         private Panel panel1;
@@ -182,5 +190,6 @@
         private Label label4;
         private Label label5;
         private Label label6;
+        private System.Windows.Forms.Timer timer1;
     }
 }

@@ -8,78 +8,89 @@ namespace Monte_Karlo
 {
     public static class MonteCarloView
     {
-        private static float _gridStep = 50;
-        private static float _gridSize = 10;
+        public static int GridStep 
+        { 
+            get => _gridStep;
+            set
+            {
+                _gridStep = value;
+                _step = _gridStep * 2;
+            }
+        }
+        private static int _gridStep = 40;
+        private static int _step = 80;
 
-        private static Pen _gridPen = new Pen(Color.LightGray, 1);
-        private static Pen _axisPen = new Pen(Color.Black, 2);
-        private static Pen _circlePen = new Pen(Color.Red, 2);
-        private static Pen _squarePen = new Pen(Color.Blue, 2);
-        private static Color _textColor = Color.Black;
+        private static readonly Pen _gridPen = new(Color.LightGray, 1);
+        private static readonly Pen _axisPen = new(Color.Black, 2);
 
-        private static Brush _textBrush;
-        private static Font _textFont = new Font("Arial", 8);
+        private static readonly Pen _cutterPen = new(Color.Red, 4);
+
+        private static readonly Pen _circlePen = new(Color.Red, 2);
+        private static readonly Pen _squarePen = new(Color.Red, 2);
+
+        //private static readonly Pen _excludedPointsBrush = new(Color.Aqua, 1);
+        private static readonly Pen _cuttedPointsBrush = new(Color.FromArgb(174, 206, 180), 1);
+
+        private static readonly Color _textColor = Color.Black;
+        private static readonly Brush _textBrush = new SolidBrush(_textColor);
+        private static readonly Font _textFont = new("Arial", 8);
 
 
 
-        public static void RenderToBuffer(Form form, PaintEventArgs e, float radius, PointF offset)
+        public static void RenderToBuffer(Panel panel, PaintEventArgs e, float radius, Point center, Direction direction, float C)
         {
             e.Graphics.Clear(Color.White);
-
-            _textBrush = new SolidBrush(_textColor);
-            OnPaint(form, e, radius, offset);
+            OnPaint(panel, e, radius, center, direction, C);
         }
 
-        private static void OnPaint(Form form, PaintEventArgs e, float radius, PointF offset)
+        private static void OnPaint(Panel panel, PaintEventArgs e, float radius, Point center, Direction direction, float C)
         {
             var g = e.Graphics;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
 
-            float centerX = form.ClientSize.Width / 2;
-            float centerY = form.ClientSize.Height / 2;
+            float centerX = panel.Size.Width / 2;
+            float centerY = panel.Size.Height / 2;
+            float squareX = centerX - radius * _step;
+            float squareY = centerY - radius * _step;
+            float coordinateX = centerX - center.X * _step;
+            float coordinateY = centerY + center.Y * _step;
+            PointF pointF = new PointF(coordinateX, coordinateY);
 
-            DrawGrid(form, g, centerX, centerY);
-
-            float squareX = centerX - (_gridStep * 2 * radius) + offset.X * _gridStep * 2;
-            float squareY = centerY - (_gridStep * 2 * radius) - offset.Y * _gridStep * 2;
-
-            DragRectangle(g, squareX, squareY, _gridStep * 2 * radius * 2);
-            DrawEllipse(g, squareX, squareY, _gridStep * 2 * radius * 2);
-
-            DrawPoint(g, squareX, squareY, _gridStep * 2);
-
-            DrawAxis(form, g, centerX, centerY);
-            DrawCoordinateNumbers(form, g, centerX, centerY);
+            DrawRectangle(g, squareX, squareY, _step * radius * 2);
+            DrawEllipse(g, squareX, squareY, _step * radius * 2);
+            DrawPoints(g, centerX, centerY, _step);
+            DrawCutter(panel, g, pointF, direction, C);
+            DrawGrid(panel, g, coordinateX, coordinateY);
+            DrawAxis(panel, g, coordinateX, coordinateY);
+            DrawCoordinateNumbers(panel, g, coordinateX, coordinateY);
         }
 
-        private static void DrawGrid(Form form, Graphics g, float centerX, float centerY)
+        private static void DrawGrid(Panel panel, Graphics g, float centerX, float centerY)
         {
             // Вертикальные линии (сетка)
-            for (float x = centerX; x < form.ClientSize.Width; x += _gridStep)
+            for (float x = centerX; x < panel.Width + centerX; x += _gridStep)
             {
-                g.DrawLine(_gridPen, x, 0, x, form.ClientSize.Height);
-                g.DrawLine(_gridPen, centerX - (x - centerX), 0, centerX - (x - centerX), form.ClientSize.Height);
+                g.DrawLine(_gridPen, x, 0, x, panel.Height);
+                g.DrawLine(_gridPen, 2 * centerX - x, 0, 2 * centerX - x, panel.Height);
             }
 
             // Горизонтальные линии (сетка)
-            for (float y = centerY; y < form.ClientSize.Height; y += _gridStep)
+            for (float y = centerY; y < panel.Height + centerY; y += _gridStep)
             {
-                g.DrawLine(_gridPen, 0, y, form.ClientSize.Width, y);
-                g.DrawLine(_gridPen, 0, centerY - (y - centerY), form.ClientSize.Width, centerY - (y - centerY));
+                g.DrawLine(_gridPen, 0, y, panel.Width, y);
+                g.DrawLine(_gridPen, 0, 2 * centerY - y, panel.Width, 2 * centerY - y);
             }
         }
-        private static void DrawAxis(Form form, Graphics g, float centerX, float centerY)
+        private static void DrawAxis(Panel panel, Graphics g, float centerX, float centerY)
         {
-            g.DrawLine(_axisPen, 0, centerY, form.ClientSize.Width, centerY);
-            g.DrawLine(_axisPen, centerX, 0, centerX, form.ClientSize.Height);
-
-
+            g.DrawLine(_axisPen, 0, centerY, panel.Width, centerY);
+            g.DrawLine(_axisPen, centerX, 0, centerX, panel.Height);
         }
-        private static void DrawCoordinateNumbers(Form form, Graphics g, float centerX, float centerY)
+        private static void DrawCoordinateNumbers(Panel panel, Graphics g, float centerX, float centerY)
         {
-            for (float x = centerX; x < form.Width; x += 2 * _gridStep)
+            for (float x = centerX; x < panel.Width + centerX; x += _step)
             {
-                int number = (int)((x - centerX) / (2 * _gridStep));
+                int number = (int)((x - centerX) / _step);
                 if (number != 0)
                 {
                     string text = number.ToString();
@@ -91,13 +102,13 @@ namespace Monte_Karlo
                 {
                     string negativeText = (-number).ToString();
                     SizeF negativeTextSize = g.MeasureString(negativeText, _textFont);
-                    g.DrawString(negativeText, _textFont, _textBrush, centerX - (x - centerX) - negativeTextSize.Width / 2, centerY + 5);
+                    g.DrawString(negativeText, _textFont, _textBrush, 2 * centerX - x - negativeTextSize.Width / 2, centerY + 5);
                 }
             }
 
-            for (float y = centerY; y < form.Height; y += 2 * _gridStep)
+            for (float y = centerY; y < panel.Height + centerY; y += _step)
             {
-                int number = (int)((y - centerY) / (2 * _gridStep));
+                int number = (int)((y - centerY) / _step);
                 if (number != 0)
                 {
                     string text = (-number).ToString();
@@ -109,14 +120,14 @@ namespace Monte_Karlo
                 {
                     string positiveText = number.ToString();
                     SizeF positiveTextSize = g.MeasureString(positiveText, _textFont);
-                    g.DrawString(positiveText, _textFont, _textBrush, centerX + 5, centerY - (y - centerY) - positiveTextSize.Height / 2);
+                    g.DrawString(positiveText, _textFont, _textBrush, centerX + 5, 2 * centerY - y - positiveTextSize.Height / 2);
                 }
             }
 
             g.DrawString("0", _textFont, _textBrush, centerX + 5, centerY + 5);
         }
 
-        private static void DragRectangle(Graphics g, float squareX, float squareY, float squareSize)
+        private static void DrawRectangle(Graphics g, float squareX, float squareY, float squareSize)
         {
             g.DrawRectangle(_squarePen, squareX, squareY, squareSize, squareSize);
         }
@@ -125,11 +136,24 @@ namespace Monte_Karlo
             g.DrawEllipse(_circlePen, squareX, squareY, squareSize, squareSize);
         }
 
-        private static void DrawPoint(Graphics g, float startX, float startY, float gridStep)
+        private static void DrawCutter(Panel panel, Graphics g, PointF center, Direction direction, float C)
         {
-            foreach (var point in MonteCarloCalculator.Points)
+            if (direction == Direction.horizontal)
+                g.DrawLine(_cutterPen, 0, center.Y + _step * -C, panel.Width, center.Y + _step * -C);
+            else
+                g.DrawLine(_cutterPen, center.X + _step * C, 0, center.X + _step * C, panel.Height);
+        }
+
+        private static void DrawPoints(Graphics g, float startX, float startY, float gridStep)
+        {
+/*            foreach (var point in MonteCarloCalculator.ExcludedPoints)
             {
-                g.FillRectangle(Brushes.Black, point.X * gridStep + startX, point.Y * gridStep + startY, 1, 1);
+                g.DrawRectangle(_excludedPointsBrush, point.X * gridStep + startX, point.Y * gridStep + startY, 1, 1);
+            }*/
+
+            foreach (var point in PointsGenerator.CuttedPoints)
+            {
+                g.DrawRectangle(_cuttedPointsBrush, point.X * gridStep + startX, point.Y * gridStep + startY, 1, 1);
             }
         }
     }
