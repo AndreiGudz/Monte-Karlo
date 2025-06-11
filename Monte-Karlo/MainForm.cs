@@ -17,11 +17,8 @@ namespace Monte_Karlo
         private static NotifyIcon notifyIcon = new NotifyIcon();
         private CancellationTokenSource _generationCts;
         private float cofficient = 2, divisionScale = 0.5f;
+        private Circle circle = new Circle();
 
-        private Point CircleCenter = new Point(3, 1);
-        private float radius = 2;
-        private Direction direction = Direction.horizontal;
-        private float C = 2;
         private int pointsCount = 100_000;
         public MainForm()
         {
@@ -37,15 +34,15 @@ namespace Monte_Karlo
 
         private void InitializeControlPanel()
         {
-            radiusTrackBar.Value = (int)radius;
+            radiusTrackBar.Value = (int)circle.radius;
             radiusLabel.Text = $"Radius: {radiusTrackBar.Value}";
 
             scaleTrackBar.Value = MonteCarloView.GridStep;
             scaleLabel.Text = $"Scale: {scaleTrackBar.Value}";
 
             SetCTrackBarBorders();
-            cTrackBar.Value = Convert.ToInt32(C * cofficient);
-            cLabel.Text = $"C: {C}";
+            cTrackBar.Value = Convert.ToInt32(circle.C * cofficient);
+            cLabel.Text = $"C: {circle.C}";
 
             pointsCountUpdown.Maximum = int.MaxValue - 1;
             pointsCountUpdown.Value = pointsCount;
@@ -53,7 +50,7 @@ namespace Monte_Karlo
 
         private void paintPanel_Paint(object sender, PaintEventArgs e)
         {
-            MonteCarloView.RenderToBuffer(paintPanel, e, radius, CircleCenter, direction, C);
+            MonteCarloView.RenderToBuffer(paintPanel, e, circle);
 
             base.OnPaint(e);
         }
@@ -61,7 +58,7 @@ namespace Monte_Karlo
         private void radiusSlider_Scroll(object sender, EventArgs e)
         {
             radiusLabel.Text = $"Radius: {radiusTrackBar.Value}";
-            radius = (float)radiusTrackBar.Value;
+            circle.radius = (float)radiusTrackBar.Value;
             SetCTrackBarBorders();
 
             GenerateRandomPoints();
@@ -69,22 +66,22 @@ namespace Monte_Karlo
 
         private void SetCTrackBarBorders()
         {
-            int border = Convert.ToInt32(radius * cofficient);
+            int border = Convert.ToInt32(circle.radius * cofficient);
             int min, max;
-            if (direction == Direction.vertical)
+            if (circle.direction == Direction.vertical)
             {
-                min = -border + CircleCenter.X * (int)cofficient;
-                max = border + CircleCenter.X * (int)cofficient;
+                min = -border + circle.circleCenter.X * (int)cofficient;
+                max = border + circle.circleCenter.X * (int)cofficient;
             }
             else
             {
-                min = -border + CircleCenter.Y * (int)cofficient;
-                max = border + CircleCenter.Y * (int)cofficient;
+                min = -border + circle.circleCenter.Y * (int)cofficient;
+                max = border + circle.circleCenter.Y * (int)cofficient;
             }
-            C = Math.Clamp(C * cofficient, min, max) * divisionScale;
+            circle.C = Math.Clamp(circle.C * cofficient, min, max) * divisionScale;
             cTrackBar.Minimum = min;
             cTrackBar.Maximum = max;
-            cLabel.Text = $"C: {C}";
+            cLabel.Text = $"C: {circle.C}";
         }
 
         private void scaleTrackbar_Scroll(object sender, EventArgs e)
@@ -104,8 +101,8 @@ namespace Monte_Karlo
 
         private void cTrackbar_ValueChanged(object sender, EventArgs e)
         {
-            C = cTrackBar.Value * divisionScale;
-            cLabel.Text = $"C: {C}";
+            circle.C = cTrackBar.Value * divisionScale;
+            cLabel.Text = $"C: {circle.C}";
 
             GenerateRandomPoints();
         }
@@ -117,10 +114,10 @@ namespace Monte_Karlo
 
         private void horizontalCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (direction == Direction.horizontal)
-                direction = Direction.vertical;
+            if (circle.direction == Direction.horizontal)
+                circle.direction = Direction.vertical;
             else
-                direction = Direction.horizontal;
+                circle.direction = Direction.horizontal;
 
             SetCTrackBarBorders();
             GenerateRandomPoints();
@@ -137,15 +134,14 @@ namespace Monte_Karlo
             try
             {
                 var token = _generationCts.Token;
-                await PointsGenerator.GenerateRandomPointsAsync(radius, pointsCount,
-                    CircleCenter, direction, C, token);
+                await PointsGenerator.GenerateRandomPointsAsync(circle, pointsCount, token);
                 if (token.IsCancellationRequested)
                     return;
 
                 paintPanel.Invalidate();
 
-                var realSquare = Calculator.CalculateIntegralArea(CircleCenter, radius, direction, C);
-                var monteCarloSquare = Calculator.CalculateMonteCarloArea(radius);
+                var realSquare = Calculator.CalculateAnalyticArea(circle);
+                var monteCarloSquare = Calculator.CalculateMonteCarloArea(circle.radius);
                 ShowNotify(realSquare, monteCarloSquare);
                 realSquareLabel.Text = $"Real Square: {realSquare:F6}";
                 MonteCarloSquare.Text = $"Monte Carlo Square: {monteCarloSquare:F6}";
@@ -167,7 +163,7 @@ namespace Monte_Karlo
             if (showMessageCheckBox.Checked)
             {
                 string message = $"""
-                Circle square: {Calculator.CircleSuare(radius)}
+                Circle square: {Calculator.CircleSuare(circle.radius)}
                 All points count: {PointsGenerator.Points.Count}
                 Into circle points count {PointsGenerator.IncludedPoints.Count}
                 Cuted asea points count: {PointsGenerator.CuttedPoints.Count}

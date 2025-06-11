@@ -100,8 +100,6 @@
             // showMessageCheckBox
             // 
             showMessageCheckBox.AutoSize = true;
-            showMessageCheckBox.Checked = true;
-            showMessageCheckBox.CheckState = CheckState.Checked;
             showMessageCheckBox.Location = new Point(8, 694);
             showMessageCheckBox.Name = "showMessageCheckBox";
             showMessageCheckBox.Size = new Size(169, 34);

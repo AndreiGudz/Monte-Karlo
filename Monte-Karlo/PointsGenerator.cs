@@ -14,9 +14,13 @@ namespace Monte_Karlo
         public static List<PointF> ExcludedPoints { get; private set; } = new();
         public static List<PointF> CuttedPoints { get; private set; } = new();
 
-        public static async Task GenerateRandomPointsAsync(float radius, int count, Point center,
-            Direction direction, float C, CancellationToken token = default)
+        public static async Task GenerateRandomPointsAsync(Circle circle, int count,  CancellationToken token = default)
         {
+            Point center = circle.circleCenter;
+            float radius = circle.radius;
+            Direction direction = circle.direction;
+            float C = circle.C;
+
             Random random = new();
             ClearPoints();
 

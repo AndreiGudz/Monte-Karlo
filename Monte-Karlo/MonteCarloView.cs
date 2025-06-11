@@ -37,10 +37,10 @@ namespace Monte_Karlo
 
 
 
-        public static void RenderToBuffer(Panel panel, PaintEventArgs e, float radius, Point center, Direction direction, float C)
+        public static void RenderToBuffer(Panel panel, PaintEventArgs e, Circle circle)
         {
             e.Graphics.Clear(Color.White);
-            OnPaint(panel, e, radius, center, direction, C);
+            OnPaint(panel, e, circle.radius, circle.circleCenter, circle.direction, circle.C);
         }
 
         private static void OnPaint(Panel panel, PaintEventArgs e, float radius, Point center, Direction direction, float C)
