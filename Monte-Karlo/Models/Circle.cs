@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Monte_Karlo
+namespace Monte_Karlo.Models
 {
     public class Circle
     {

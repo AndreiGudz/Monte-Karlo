@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Monte_Karlo.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace Monte_Karlo
             if (direction == Direction.horizontal)
             {
                 double yLine = C;
-                double d = Math.Abs(yLine - center.Y);  // расстояние от центра до хорды
+                double d = Math.Abs(center.Y - yLine);  // расстояние от центра до хорды
                 double h = Math.Abs(R - d);             // расстояние от хорды до окружности
                 double CircleArea = Math.PI * R * R;
 
@@ -37,16 +38,17 @@ namespace Monte_Karlo
             else
             {
                 double xLine = C;
-                double h = Math.Abs(center.X - xLine);  // расстояние от центра до хорды
-                double d = Math.Abs(R - h);             // расстояние от хорды до окружности
+                double d = Math.Abs(center.X - xLine);  // расстояние от центра до хорды
+                double h = Math.Abs(R - d);             // расстояние от хорды до окружности
+                double CircleArea = Math.PI * R * R;
 
                 if (d >= R)
-                    return (xLine > center.X) ? 0 : Math.PI * R * R;
+                    return CircleArea;
                 if (h == R)
-                    return Math.PI * R * R / 2;
+                    return CircleArea / 2;
 
                 double segmentArea = GetSegmentArea(R, d);
-                return Math.PI * R * R - segmentArea;
+                return CircleArea - segmentArea;
             }
         }
 
@@ -62,8 +64,15 @@ namespace Monte_Karlo
         {
             int allPoints = PointsGenerator.Points.Count;
             int cuttedPoints = PointsGenerator.CuttedPoints.Count;
-            double squareArea = Math.Pow(radius * 2, 2);
+            double squareArea = 4 * radius * radius;
             return cuttedPoints / (double)allPoints * squareArea;
+        }
+
+        public static double CalculateAbsoluteError(double expectedResult, double actualResult) => expectedResult - actualResult;
+
+        public static double CalculateRelativeError(double expectedResult, double actualResult)
+        { 
+            return Math.Abs(CalculateAbsoluteError(expectedResult, actualResult)) / actualResult * 100d;
         }
     }
 }

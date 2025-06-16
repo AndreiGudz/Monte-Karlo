@@ -49,9 +49,9 @@
             // 
             startButton.BackColor = Color.FromArgb(174, 206, 180);
             startButton.Font = new Font("Segoe UI", 14F);
-            startButton.Location = new Point(10, 470);
+            startButton.Location = new Point(15, 469);
             startButton.Name = "startButton";
-            startButton.Size = new Size(492, 84);
+            startButton.Size = new Size(480, 84);
             startButton.TabIndex = 5;
             startButton.Text = "Перейти к программе";
             startButton.UseVisualStyleBackColor = false;
@@ -91,7 +91,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 14F);
-            label1.Location = new Point(12, 33);
+            label1.Location = new Point(15, 37);
             label1.Name = "label1";
             label1.Size = new Size(364, 45);
             label1.TabIndex = 9;
@@ -101,7 +101,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 14F);
-            label2.Location = new Point(12, 104);
+            label2.Location = new Point(15, 104);
             label2.Name = "label2";
             label2.Size = new Size(91, 45);
             label2.TabIndex = 10;
@@ -111,7 +111,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 14F);
-            label3.Location = new Point(12, 176);
+            label3.Location = new Point(15, 169);
             label3.Name = "label3";
             label3.Size = new Size(90, 45);
             label3.TabIndex = 11;
@@ -121,7 +121,7 @@
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 14F);
-            label4.Location = new Point(12, 247);
+            label4.Location = new Point(15, 235);
             label4.Name = "label4";
             label4.Size = new Size(74, 45);
             label4.TabIndex = 12;
@@ -131,7 +131,7 @@
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI", 14F);
-            label5.Location = new Point(12, 319);
+            label5.Location = new Point(15, 295);
             label5.Name = "label5";
             label5.Size = new Size(463, 45);
             label5.TabIndex = 13;
@@ -141,7 +141,7 @@
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Segoe UI", 14F);
-            label6.Location = new Point(12, 388);
+            label6.Location = new Point(15, 358);
             label6.Name = "label6";
             label6.Size = new Size(74, 45);
             label6.TabIndex = 14;

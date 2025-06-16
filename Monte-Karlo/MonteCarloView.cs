@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Monte_Karlo.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,8 @@ namespace Monte_Karlo
         private static readonly Pen _circlePen = new(Color.Red, 2);
         private static readonly Pen _squarePen = new(Color.Red, 2);
 
-        //private static readonly Pen _excludedPointsBrush = new(Color.Aqua, 1);
+        private static readonly Pen _excludedPointsBrush = new(Color.Aqua, 1);
+        private static readonly Pen _includedPointsBrush = new(Color.Yellow, 1);
         private static readonly Pen _cuttedPointsBrush = new(Color.FromArgb(174, 206, 180), 1);
 
         private static readonly Color _textColor = Color.Black;
@@ -43,7 +45,7 @@ namespace Monte_Karlo
             OnPaint(panel, e, circle.radius, circle.circleCenter, circle.direction, circle.C);
         }
 
-        private static void OnPaint(Panel panel, PaintEventArgs e, float radius, Point center, Direction direction, float C)
+        private static void OnPaint(Panel panel, PaintEventArgs e, float radius, Point circleCenter, Direction direction, float C)
         {
             var g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
@@ -54,79 +56,133 @@ namespace Monte_Karlo
             float squareX = centerX - radius * _step;
             float squareY = centerY - radius * _step;
             var squarePoint = new PointF(squareX, squareY);
-            float coordinateX = centerX - center.X * _step;
-            float coordinateY = centerY + center.Y * _step;
-            var coordinate = new PointF(coordinateX, coordinateY);
+            float originX = centerX - circleCenter.X * _step;
+            float originY = centerY + circleCenter.Y * _step;
+            var origin = new PointF(originX, originY);
 
             DrawPoints(g, centerScreen, _step);
-            DrawGrid(panel, g, coordinate, centerScreen);
-            DrawAxis(panel, g, coordinate);
-            DrawCoordinateNumbers(panel, g, coordinate, centerScreen);
+            DrawGrid(panel, g, origin);
+            DrawAxis(panel, g, origin);
+            DrawCoordinateNumbers(panel, g, origin);
             DrawRectangle(g, squarePoint, _step * radius * 2);
             DrawEllipse(g, squarePoint, _step * radius * 2);
-            DrawCutter(panel, g, coordinate, direction, C);
+            DrawCutter(panel, g, origin, direction, C);
         }
 
-        private static void DrawGrid(Panel panel, Graphics g, PointF center, PointF centerScreen)
+        private static void DrawGrid(Panel panel, Graphics g, PointF origin)
         {
-            // Вертикальные линии (сетка)
-            for (float x = center.X; x < centerScreen.X + panel.Width; x += _gridStep)
+            // Вертикальные линии
+            for (float x = origin.X; x >= 0; x -= _gridStep)
             {
                 g.DrawLine(_gridPen, x, 0, x, panel.Height);
-                g.DrawLine(_gridPen, 2 * center.X - x, 0, 2 * center.X - x, panel.Height);
+            }
+            for (float x = origin.X; x <= panel.Width; x += _gridStep)
+            {
+                g.DrawLine(_gridPen, x, 0, x, panel.Height);
             }
 
-            // Горизонтальные линии (сетка)
-            for (float y = center.Y; y < centerScreen.Y + panel.Height; y += _gridStep)
+            // Горизонтальные линии
+            for (float y = origin.Y; y >= 0; y -= _gridStep)
             {
                 g.DrawLine(_gridPen, 0, y, panel.Width, y);
-                g.DrawLine(_gridPen, 0, 2 * center.Y - y, panel.Width, 2 * center.Y - y);
+            }
+            for (float y = origin.Y; y <= panel.Height; y += _gridStep)
+            {
+                g.DrawLine(_gridPen, 0, y, panel.Width, y);
             }
         }
+
         private static void DrawAxis(Panel panel, Graphics g, PointF center)
         {
             g.DrawLine(_axisPen, 0, center.Y, panel.Width, center.Y);
             g.DrawLine(_axisPen, center.X, 0, center.X, panel.Height);
         }
-        private static void DrawCoordinateNumbers(Panel panel, Graphics g, PointF center, PointF centerScreen)
+        private static void DrawCoordinateNumbers(Panel panel, Graphics g, PointF origin)
         {
-            for (float x = center.X; x < centerScreen.X + panel.Width; x += _step)
+            // Числа на оси X
+            // влево
+            for (float x = origin.X; x >= 0; x -= _step)
             {
-                int number = (int)((x - center.X) / _step);
-                if (number != 0)
-                {
-                    string text = number.ToString();
-                    SizeF textSize = g.MeasureString(text, _textFont);
-                    g.DrawString(text, _textFont, _textBrush, x - textSize.Width / 2, center.Y + 5);
-                }
+                int digit = (int)Math.Round((x - origin.X) / _step);
+                if (digit == 0)
+                    continue;
 
-                if (x != center.X)
+                string text = digit.ToString();
+                SizeF textSize = g.MeasureString(text, _textFont);
+                float textX = x - textSize.Width / 2;
+                float textY = origin.Y + 5;
+
+                if (TextInPanel(panel, textSize, textX, textY))
                 {
-                    string negativeText = (-number).ToString();
-                    SizeF negativeTextSize = g.MeasureString(negativeText, _textFont);
-                    g.DrawString(negativeText, _textFont, _textBrush, 2 * center.X - x - negativeTextSize.Width / 2, center.Y + 5);
+                    g.DrawString(text, _textFont, _textBrush, textX, textY);
                 }
             }
 
-            for (float y = center.Y; y < centerScreen.Y + panel.Height; y += _step)
+            // вправо
+            for (float x = origin.X; x <= panel.Width; x += _step)
             {
-                int number = (int)((y - center.Y) / _step);
-                if (number != 0)
-                {
-                    string text = (-number).ToString();
-                    SizeF textSize = g.MeasureString(text, _textFont);
-                    g.DrawString(text, _textFont, _textBrush, center.X + 5, y - textSize.Height / 2);
-                }
+                int digit = (int)Math.Round((x - origin.X) / _step);
+                if (digit == 0) 
+                    continue;
 
-                if (y != center.Y)
+                string text = digit.ToString();
+                SizeF textSize = g.MeasureString(text, _textFont);
+                float textX = x - textSize.Width / 2;
+                float textY = origin.Y + 5;
+
+                if (TextInPanel(panel, textSize, textX, textY))
                 {
-                    string positiveText = number.ToString();
-                    SizeF positiveTextSize = g.MeasureString(positiveText, _textFont);
-                    g.DrawString(positiveText, _textFont, _textBrush, center.X + 5, 2 * center.Y - y - positiveTextSize.Height / 2);
+                    g.DrawString(text, _textFont, _textBrush, textX, textY);
                 }
             }
 
-            g.DrawString("0", _textFont, _textBrush, center.X + 5, center.Y + 5);
+
+            // Числа на оси Y
+            // вверх
+            for (float y = origin.Y; y >= 0; y -= _step)
+            {
+                int digit = -(int)Math.Round((y - origin.Y) / _step);
+                if (digit == 0)
+                    continue;
+
+                string text = digit.ToString();
+                SizeF textSize = g.MeasureString(text, _textFont);
+                float textX = origin.X + 5;
+                float textY = y - textSize.Height / 2;
+
+                if (TextInPanel(panel, textSize, textX, textY))
+                {
+                    g.DrawString(text, _textFont, _textBrush, textX, textY);
+                }
+            }
+
+            
+            // вниз
+            for (float y = origin.Y; y <= panel.Height; y += _step)
+            {
+                int digit = -(int)Math.Round((y - origin.Y) / _step);
+                if (digit == 0) 
+                    continue;
+
+                string text = digit.ToString();
+                SizeF textSize = g.MeasureString(text, _textFont);
+                float textX = origin.X + 5;
+                float textY = y - textSize.Height / 2;
+
+                if (TextInPanel(panel, textSize, textX, textY))
+                {
+                    g.DrawString(text, _textFont, _textBrush, textX, textY);
+                }
+            }
+
+            g.DrawString("0", _textFont, _textBrush, origin.X + 5, origin.Y + 5);
+        }
+
+        private static bool TextInPanel(Panel panel, SizeF textSize, float textX = 0, float textY = 0)
+        {
+            bool xIn = textX >= 0 && textX + textSize.Width <= panel.Width;
+            bool yIn = textY >= 0 && textY + textSize.Height <= panel.Height;
+            return xIn && yIn;
         }
 
         private static void DrawRectangle(Graphics g, PointF square, float squareSize)
@@ -148,9 +204,19 @@ namespace Monte_Karlo
 
         private static void DrawPoints(Graphics g, PointF center, float gridStep)
         {
+/*            foreach (var point in PointsGenerator.ExcludedPoints)
+            {
+                g.DrawRectangle(_excludedPointsBrush, point.X * gridStep + center.X, center.Y - point.Y * gridStep, 1, 1);
+            }
+            foreach (var point in PointsGenerator.IncludedPoints)
+            {
+                g.DrawRectangle(_includedPointsBrush, point.X * gridStep + center.X, center.Y - point.Y * gridStep, 1, 1);
+            }*/
             foreach (var point in PointsGenerator.CuttedPoints)
             {
-                g.DrawRectangle(_cuttedPointsBrush, point.X * gridStep + center.X, point.Y * gridStep + center.Y, 1, 1);
+                float screenX = center.X + point.X * gridStep;
+                float screenY = center.Y - point.Y * gridStep;
+                g.DrawRectangle(_cuttedPointsBrush, screenX, screenY, 1, 1);
             }
         }
     }

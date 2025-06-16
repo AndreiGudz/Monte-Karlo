@@ -29,171 +29,330 @@
         private void InitializeComponent()
         {
             paintPanel = new Panel();
-            panel2 = new Panel();
-            showMessageCheckBox = new CheckBox();
-            MonteCarloSquare = new Label();
-            horizontalCheckBox = new CheckBox();
+            controlPanel = new Panel();
+            buttonsPanel = new Panel();
+            button2 = new Button();
+            button1 = new Button();
+            resultPanel = new Panel();
+            monteCarloSquareLabel = new Label();
             realSquareLabel = new Label();
-            panel6 = new Panel();
-            cTrackBar = new TrackBar();
-            cLabel = new Label();
-            panel5 = new Panel();
-            scaleTrackBar = new TrackBar();
-            scaleLabel = new Label();
-            panel4 = new Panel();
+            checkBoxPanel = new Panel();
+            showMessageCheckBox = new CheckBox();
+            horizontalCheckBox = new CheckBox();
+            circlePositionPanel = new Panel();
+            yLabel = new Label();
+            yNumericUpDown = new NumericUpDown();
+            xLabel = new Label();
+            xNumericUpDown = new NumericUpDown();
+            pointCountPanel = new Panel();
             pointsCountUpdown = new NumericUpDown();
             pointsCountLabel = new Label();
-            panel3 = new Panel();
+            constantLinePanel = new Panel();
+            cTrackBar = new TrackBar();
+            cLabel = new Label();
+            scalePpanel = new Panel();
+            scaleTrackBar = new TrackBar();
+            scaleLabel = new Label();
+            radiusPanel = new Panel();
             radiusTrackBar = new TrackBar();
             radiusLabel = new Label();
-            label1 = new Label();
-            menuStrip1 = new MenuStrip();
+            controlPanelLabel = new Label();
+            menuStrip = new MenuStrip();
             programHelpToolStripMenuItem = new ToolStripMenuItem();
             aboutProgramToolStripMenuItem = new ToolStripMenuItem();
-            управлениеToolStripMenuItem = new ToolStripMenuItem();
-            сгенерироватьТочкиToolStripMenuItem = new ToolStripMenuItem();
-            очиститьТочкиToolStripMenuItem = new ToolStripMenuItem();
+            анализСохранённныхРезультатовToolStripMenuItem = new ToolStripMenuItem();
             closeProgramToolStripMenuItem = new ToolStripMenuItem();
-            panel2.SuspendLayout();
-            panel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)cTrackBar).BeginInit();
-            panel5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)scaleTrackBar).BeginInit();
-            panel4.SuspendLayout();
+            controlPanel.SuspendLayout();
+            buttonsPanel.SuspendLayout();
+            resultPanel.SuspendLayout();
+            checkBoxPanel.SuspendLayout();
+            circlePositionPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)yNumericUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)xNumericUpDown).BeginInit();
+            pointCountPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pointsCountUpdown).BeginInit();
-            panel3.SuspendLayout();
+            constantLinePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)cTrackBar).BeginInit();
+            scalePpanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)scaleTrackBar).BeginInit();
+            radiusPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)radiusTrackBar).BeginInit();
-            menuStrip1.SuspendLayout();
+            menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // paintPanel
             // 
+            paintPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             paintPanel.BorderStyle = BorderStyle.FixedSingle;
-            paintPanel.Dock = DockStyle.Right;
-            paintPanel.Location = new Point(481, 38);
+            paintPanel.Location = new Point(513, 55);
             paintPanel.Margin = new Padding(4);
             paintPanel.Name = "paintPanel";
-            paintPanel.Size = new Size(962, 962);
+            paintPanel.Size = new Size(899, 1024);
             paintPanel.TabIndex = 0;
             paintPanel.Paint += paintPanel_Paint;
+            paintPanel.Resize += paintPanel_Resize;
             // 
-            // panel2
+            // controlPanel
             // 
-            panel2.BackColor = SystemColors.ActiveBorder;
-            panel2.BorderStyle = BorderStyle.Fixed3D;
-            panel2.Controls.Add(showMessageCheckBox);
-            panel2.Controls.Add(MonteCarloSquare);
-            panel2.Controls.Add(horizontalCheckBox);
-            panel2.Controls.Add(realSquareLabel);
-            panel2.Controls.Add(panel6);
-            panel2.Controls.Add(panel5);
-            panel2.Controls.Add(panel4);
-            panel2.Controls.Add(panel3);
-            panel2.Controls.Add(label1);
-            panel2.Dock = DockStyle.Left;
-            panel2.Location = new Point(0, 38);
-            panel2.Margin = new Padding(4);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(401, 962);
-            panel2.TabIndex = 1;
+            controlPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            controlPanel.AutoScroll = true;
+            controlPanel.BackColor = SystemColors.ActiveBorder;
+            controlPanel.BorderStyle = BorderStyle.Fixed3D;
+            controlPanel.Controls.Add(buttonsPanel);
+            controlPanel.Controls.Add(resultPanel);
+            controlPanel.Controls.Add(checkBoxPanel);
+            controlPanel.Controls.Add(circlePositionPanel);
+            controlPanel.Controls.Add(pointCountPanel);
+            controlPanel.Controls.Add(constantLinePanel);
+            controlPanel.Controls.Add(scalePpanel);
+            controlPanel.Controls.Add(radiusPanel);
+            controlPanel.Controls.Add(controlPanelLabel);
+            controlPanel.Location = new Point(15, 55);
+            controlPanel.Margin = new Padding(4);
+            controlPanel.Name = "controlPanel";
+            controlPanel.Size = new Size(490, 1024);
+            controlPanel.TabIndex = 1;
             // 
-            // showMessageCheckBox
+            // buttonsPanel
             // 
-            showMessageCheckBox.AutoSize = true;
-            showMessageCheckBox.Location = new Point(8, 694);
-            showMessageCheckBox.Name = "showMessageCheckBox";
-            showMessageCheckBox.Size = new Size(169, 34);
-            showMessageCheckBox.TabIndex = 6;
-            showMessageCheckBox.Text = "showMessage";
-            showMessageCheckBox.UseVisualStyleBackColor = true;
+            buttonsPanel.BackColor = SystemColors.ActiveCaption;
+            buttonsPanel.Controls.Add(button2);
+            buttonsPanel.Controls.Add(button1);
+            buttonsPanel.Location = new Point(15, 781);
+            buttonsPanel.Name = "buttonsPanel";
+            buttonsPanel.Size = new Size(450, 108);
+            buttonsPanel.TabIndex = 4;
             // 
-            // MonteCarloSquare
+            // button2
             // 
-            MonteCarloSquare.AutoSize = true;
-            MonteCarloSquare.Location = new Point(12, 883);
-            MonteCarloSquare.Margin = new Padding(4, 0, 4, 0);
-            MonteCarloSquare.Name = "MonteCarloSquare";
-            MonteCarloSquare.Size = new Size(203, 30);
-            MonteCarloSquare.TabIndex = 3;
-            MonteCarloSquare.Text = "Monte Carlo Square:";
+            button2.Location = new Point(239, 13);
+            button2.Name = "button2";
+            button2.Size = new Size(196, 82);
+            button2.TabIndex = 1;
+            button2.Text = "Очистить\r\nточки";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += очиститьТочкиButton_Click;
             // 
-            // horizontalCheckBox
+            // button1
             // 
-            horizontalCheckBox.AutoSize = true;
-            horizontalCheckBox.Checked = true;
-            horizontalCheckBox.CheckState = CheckState.Checked;
-            horizontalCheckBox.Location = new Point(10, 654);
-            horizontalCheckBox.Name = "horizontalCheckBox";
-            horizontalCheckBox.Size = new Size(132, 34);
-            horizontalCheckBox.TabIndex = 5;
-            horizontalCheckBox.Text = "horizontal";
-            horizontalCheckBox.UseVisualStyleBackColor = true;
-            horizontalCheckBox.CheckedChanged += horizontalCheckBox_CheckedChanged;
+            button1.Location = new Point(15, 13);
+            button1.Name = "button1";
+            button1.Size = new Size(196, 82);
+            button1.TabIndex = 0;
+            button1.Text = "Генерировать\r\nточки";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += GeneratePointsButton_Click;
+            // 
+            // resultPanel
+            // 
+            resultPanel.BackColor = SystemColors.ActiveCaption;
+            resultPanel.Controls.Add(monteCarloSquareLabel);
+            resultPanel.Controls.Add(realSquareLabel);
+            resultPanel.Location = new Point(15, 895);
+            resultPanel.Name = "resultPanel";
+            resultPanel.Size = new Size(450, 122);
+            resultPanel.TabIndex = 9;
+            // 
+            // monteCarloSquareLabel
+            // 
+            monteCarloSquareLabel.AutoSize = true;
+            monteCarloSquareLabel.Location = new Point(15, 58);
+            monteCarloSquareLabel.Margin = new Padding(4, 0, 4, 0);
+            monteCarloSquareLabel.Name = "monteCarloSquareLabel";
+            monteCarloSquareLabel.Size = new Size(332, 30);
+            monteCarloSquareLabel.TabIndex = 3;
+            monteCarloSquareLabel.Text = "Площадь методом Монте-Карло:";
             // 
             // realSquareLabel
             // 
             realSquareLabel.AutoSize = true;
-            realSquareLabel.Location = new Point(16, 837);
+            realSquareLabel.Location = new Point(15, 14);
             realSquareLabel.Margin = new Padding(4, 0, 4, 0);
             realSquareLabel.Name = "realSquareLabel";
-            realSquareLabel.Size = new Size(127, 30);
+            realSquareLabel.Size = new Size(319, 30);
             realSquareLabel.TabIndex = 2;
-            realSquareLabel.Text = "Real Square:";
+            realSquareLabel.Text = "Площадь секции аналитически:";
             // 
-            // panel6
+            // checkBoxPanel
             // 
-            panel6.Controls.Add(cTrackBar);
-            panel6.Controls.Add(cLabel);
-            panel6.Location = new Point(5, 329);
-            panel6.Margin = new Padding(4);
-            panel6.Name = "panel6";
-            panel6.Size = new Size(360, 144);
-            panel6.TabIndex = 3;
+            checkBoxPanel.BackColor = SystemColors.ActiveCaption;
+            checkBoxPanel.Controls.Add(showMessageCheckBox);
+            checkBoxPanel.Controls.Add(horizontalCheckBox);
+            checkBoxPanel.Location = new Point(15, 672);
+            checkBoxPanel.Name = "checkBoxPanel";
+            checkBoxPanel.Size = new Size(450, 100);
+            checkBoxPanel.TabIndex = 8;
+            // 
+            // showMessageCheckBox
+            // 
+            showMessageCheckBox.AutoSize = true;
+            showMessageCheckBox.CheckAlign = ContentAlignment.MiddleRight;
+            showMessageCheckBox.Location = new Point(15, 56);
+            showMessageCheckBox.Name = "showMessageCheckBox";
+            showMessageCheckBox.Size = new Size(376, 34);
+            showMessageCheckBox.TabIndex = 6;
+            showMessageCheckBox.Text = "Показывать результат вычислений";
+            showMessageCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // horizontalCheckBox
+            // 
+            horizontalCheckBox.AutoSize = true;
+            horizontalCheckBox.CheckAlign = ContentAlignment.MiddleRight;
+            horizontalCheckBox.Checked = true;
+            horizontalCheckBox.CheckState = CheckState.Checked;
+            horizontalCheckBox.Location = new Point(15, 16);
+            horizontalCheckBox.Name = "horizontalCheckBox";
+            horizontalCheckBox.Size = new Size(339, 34);
+            horizontalCheckBox.TabIndex = 5;
+            horizontalCheckBox.Text = "Направление горизонтальное: ";
+            horizontalCheckBox.UseVisualStyleBackColor = true;
+            horizontalCheckBox.CheckedChanged += horizontalCheckBox_CheckedChanged;
+            // 
+            // circlePositionPanel
+            // 
+            circlePositionPanel.BackColor = SystemColors.ActiveCaption;
+            circlePositionPanel.Controls.Add(yLabel);
+            circlePositionPanel.Controls.Add(yNumericUpDown);
+            circlePositionPanel.Controls.Add(xLabel);
+            circlePositionPanel.Controls.Add(xNumericUpDown);
+            circlePositionPanel.Location = new Point(15, 71);
+            circlePositionPanel.Name = "circlePositionPanel";
+            circlePositionPanel.Size = new Size(450, 70);
+            circlePositionPanel.TabIndex = 7;
+            // 
+            // yLabel
+            // 
+            yLabel.AutoSize = true;
+            yLabel.Font = new Font("Segoe UI", 12F);
+            yLabel.Location = new Point(250, 15);
+            yLabel.Name = "yLabel";
+            yLabel.Size = new Size(38, 38);
+            yLabel.TabIndex = 3;
+            yLabel.Text = "Y:";
+            // 
+            // yNumericUpDown
+            // 
+            yNumericUpDown.Location = new Point(295, 15);
+            yNumericUpDown.Minimum = new decimal(new int[] { 100, 0, 0, int.MinValue });
+            yNumericUpDown.Name = "yNumericUpDown";
+            yNumericUpDown.Size = new Size(140, 35);
+            yNumericUpDown.TabIndex = 2;
+            yNumericUpDown.ValueChanged += yNumericUpDown_ValueChanged;
+            // 
+            // xLabel
+            // 
+            xLabel.AutoSize = true;
+            xLabel.Font = new Font("Segoe UI", 12F);
+            xLabel.Location = new Point(15, 15);
+            xLabel.Name = "xLabel";
+            xLabel.Size = new Size(40, 38);
+            xLabel.TabIndex = 1;
+            xLabel.Text = "X:";
+            // 
+            // xNumericUpDown
+            // 
+            xNumericUpDown.Location = new Point(60, 15);
+            xNumericUpDown.Minimum = new decimal(new int[] { 100, 0, 0, int.MinValue });
+            xNumericUpDown.Name = "xNumericUpDown";
+            xNumericUpDown.Size = new Size(140, 35);
+            xNumericUpDown.TabIndex = 0;
+            xNumericUpDown.ValueChanged += xNumericUpDown_ValueChanged;
+            // 
+            // pointCountPanel
+            // 
+            pointCountPanel.BackColor = SystemColors.ActiveCaption;
+            pointCountPanel.Controls.Add(pointsCountUpdown);
+            pointCountPanel.Controls.Add(pointsCountLabel);
+            pointCountPanel.Location = new Point(15, 301);
+            pointCountPanel.Margin = new Padding(4);
+            pointCountPanel.Name = "pointCountPanel";
+            pointCountPanel.Size = new Size(450, 58);
+            pointCountPanel.TabIndex = 3;
+            // 
+            // pointsCountUpdown
+            // 
+            pointsCountUpdown.Location = new Point(250, 13);
+            pointsCountUpdown.Margin = new Padding(4);
+            pointsCountUpdown.Maximum = new decimal(new int[] { 1000000, 0, 0, 0 });
+            pointsCountUpdown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            pointsCountUpdown.Name = "pointsCountUpdown";
+            pointsCountUpdown.Size = new Size(185, 35);
+            pointsCountUpdown.TabIndex = 3;
+            pointsCountUpdown.TextAlign = HorizontalAlignment.Right;
+            pointsCountUpdown.ThousandsSeparator = true;
+            pointsCountUpdown.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            pointsCountUpdown.ValueChanged += pointsCountUpdown_ValueChanged;
+            // 
+            // pointsCountLabel
+            // 
+            pointsCountLabel.BackColor = SystemColors.ActiveBorder;
+            pointsCountLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            pointsCountLabel.Location = new Point(15, 8);
+            pointsCountLabel.Margin = new Padding(4, 0, 4, 0);
+            pointsCountLabel.Name = "pointsCountLabel";
+            pointsCountLabel.Size = new Size(225, 40);
+            pointsCountLabel.TabIndex = 2;
+            pointsCountLabel.Text = "Количество точек:";
+            pointsCountLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // constantLinePanel
+            // 
+            constantLinePanel.BackColor = SystemColors.ActiveCaption;
+            constantLinePanel.Controls.Add(cTrackBar);
+            constantLinePanel.Controls.Add(cLabel);
+            constantLinePanel.Location = new Point(15, 369);
+            constantLinePanel.Margin = new Padding(4);
+            constantLinePanel.Name = "constantLinePanel";
+            constantLinePanel.Size = new Size(450, 145);
+            constantLinePanel.TabIndex = 3;
             // 
             // cTrackBar
             // 
+            cTrackBar.BackColor = SystemColors.ActiveBorder;
             cTrackBar.LargeChange = 1;
-            cTrackBar.Location = new Point(4, 51);
+            cTrackBar.Location = new Point(15, 55);
             cTrackBar.Margin = new Padding(4);
             cTrackBar.Maximum = 42;
             cTrackBar.Minimum = -42;
             cTrackBar.Name = "cTrackBar";
-            cTrackBar.Size = new Size(351, 80);
+            cTrackBar.Size = new Size(420, 80);
             cTrackBar.TabIndex = 0;
             cTrackBar.Value = 1;
             cTrackBar.ValueChanged += cTrackbar_ValueChanged;
             // 
             // cLabel
             // 
-            cLabel.BackColor = Color.Transparent;
+            cLabel.BackColor = SystemColors.ActiveBorder;
             cLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            cLabel.Location = new Point(0, 0);
+            cLabel.Location = new Point(15, 9);
             cLabel.Margin = new Padding(4, 0, 4, 0);
             cLabel.Name = "cLabel";
-            cLabel.Size = new Size(360, 46);
+            cLabel.Size = new Size(420, 40);
             cLabel.TabIndex = 2;
-            cLabel.Text = "C";
+            cLabel.Text = "Значение C: ";
             cLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // panel5
+            // scalePpanel
             // 
-            panel5.Controls.Add(scaleTrackBar);
-            panel5.Controls.Add(scaleLabel);
-            panel5.Location = new Point(8, 490);
-            panel5.Margin = new Padding(4);
-            panel5.Name = "panel5";
-            panel5.Size = new Size(360, 144);
-            panel5.TabIndex = 3;
+            scalePpanel.BackColor = SystemColors.ActiveCaption;
+            scalePpanel.Controls.Add(scaleTrackBar);
+            scalePpanel.Controls.Add(scaleLabel);
+            scalePpanel.Location = new Point(15, 523);
+            scalePpanel.Margin = new Padding(4);
+            scalePpanel.Name = "scalePpanel";
+            scalePpanel.Size = new Size(450, 140);
+            scalePpanel.TabIndex = 3;
             // 
             // scaleTrackBar
             // 
             scaleTrackBar.AutoSize = false;
-            scaleTrackBar.Location = new Point(4, 51);
+            scaleTrackBar.BackColor = SystemColors.ActiveBorder;
+            scaleTrackBar.Location = new Point(15, 51);
             scaleTrackBar.Margin = new Padding(4);
             scaleTrackBar.Maximum = 150;
             scaleTrackBar.Minimum = 10;
             scaleTrackBar.Name = "scaleTrackBar";
-            scaleTrackBar.Size = new Size(351, 84);
+            scaleTrackBar.Size = new Size(420, 70);
             scaleTrackBar.SmallChange = 5;
             scaleTrackBar.TabIndex = 0;
             scaleTrackBar.TickFrequency = 5;
@@ -203,108 +362,74 @@
             // 
             // scaleLabel
             // 
-            scaleLabel.BackColor = Color.Transparent;
+            scaleLabel.BackColor = SystemColors.ActiveBorder;
             scaleLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            scaleLabel.Location = new Point(0, 0);
+            scaleLabel.Location = new Point(15, 5);
             scaleLabel.Margin = new Padding(4, 0, 4, 0);
             scaleLabel.Name = "scaleLabel";
-            scaleLabel.Size = new Size(360, 46);
+            scaleLabel.Size = new Size(420, 40);
             scaleLabel.TabIndex = 2;
-            scaleLabel.Text = "Scale";
+            scaleLabel.Text = "Масштаб: ";
             scaleLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // panel4
+            // radiusPanel
             // 
-            panel4.Controls.Add(pointsCountUpdown);
-            panel4.Controls.Add(pointsCountLabel);
-            panel4.Location = new Point(8, 222);
-            panel4.Margin = new Padding(4);
-            panel4.Name = "panel4";
-            panel4.Size = new Size(360, 99);
-            panel4.TabIndex = 3;
-            // 
-            // pointsCountUpdown
-            // 
-            pointsCountUpdown.Location = new Point(4, 51);
-            pointsCountUpdown.Margin = new Padding(4);
-            pointsCountUpdown.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
-            pointsCountUpdown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            pointsCountUpdown.Name = "pointsCountUpdown";
-            pointsCountUpdown.Size = new Size(351, 35);
-            pointsCountUpdown.TabIndex = 3;
-            pointsCountUpdown.TextAlign = HorizontalAlignment.Right;
-            pointsCountUpdown.ThousandsSeparator = true;
-            pointsCountUpdown.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            pointsCountUpdown.ValueChanged += pointsCountUpdown_ValueChanged;
-            // 
-            // pointsCountLabel
-            // 
-            pointsCountLabel.BackColor = Color.Transparent;
-            pointsCountLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            pointsCountLabel.Location = new Point(0, 0);
-            pointsCountLabel.Margin = new Padding(4, 0, 4, 0);
-            pointsCountLabel.Name = "pointsCountLabel";
-            pointsCountLabel.Size = new Size(360, 46);
-            pointsCountLabel.TabIndex = 2;
-            pointsCountLabel.Text = "Points Count";
-            pointsCountLabel.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // panel3
-            // 
-            panel3.Controls.Add(radiusTrackBar);
-            panel3.Controls.Add(radiusLabel);
-            panel3.Location = new Point(5, 70);
-            panel3.Margin = new Padding(4);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(360, 144);
-            panel3.TabIndex = 1;
+            radiusPanel.BackColor = SystemColors.ActiveCaption;
+            radiusPanel.Controls.Add(radiusTrackBar);
+            radiusPanel.Controls.Add(radiusLabel);
+            radiusPanel.Location = new Point(15, 150);
+            radiusPanel.Margin = new Padding(4);
+            radiusPanel.Name = "radiusPanel";
+            radiusPanel.Size = new Size(450, 140);
+            radiusPanel.TabIndex = 1;
             // 
             // radiusTrackBar
             // 
+            radiusTrackBar.BackColor = SystemColors.ActiveBorder;
             radiusTrackBar.LargeChange = 1;
-            radiusTrackBar.Location = new Point(4, 51);
+            radiusTrackBar.Location = new Point(15, 54);
             radiusTrackBar.Margin = new Padding(4);
             radiusTrackBar.Maximum = 20;
             radiusTrackBar.Minimum = 1;
             radiusTrackBar.Name = "radiusTrackBar";
-            radiusTrackBar.Size = new Size(351, 80);
+            radiusTrackBar.Size = new Size(420, 80);
             radiusTrackBar.TabIndex = 0;
             radiusTrackBar.Value = 1;
             radiusTrackBar.Scroll += radiusSlider_Scroll;
             // 
             // radiusLabel
             // 
-            radiusLabel.BackColor = Color.Transparent;
+            radiusLabel.BackColor = SystemColors.ActiveBorder;
             radiusLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            radiusLabel.Location = new Point(0, 0);
+            radiusLabel.Location = new Point(15, 5);
             radiusLabel.Margin = new Padding(4, 0, 4, 0);
             radiusLabel.Name = "radiusLabel";
-            radiusLabel.Size = new Size(360, 46);
+            radiusLabel.Size = new Size(420, 40);
             radiusLabel.TabIndex = 2;
-            radiusLabel.Text = "Radius";
+            radiusLabel.Text = "Радиус круга: ";
             radiusLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // label1
+            // controlPanelLabel
             // 
-            label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Segoe UI", 12F, FontStyle.Underline, GraphicsUnit.Point, 204);
-            label1.Location = new Point(-2, 21);
-            label1.Margin = new Padding(4, 0, 4, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(375, 66);
-            label1.TabIndex = 0;
-            label1.Text = "Control panel";
-            label1.TextAlign = ContentAlignment.MiddleCenter;
+            controlPanelLabel.BackColor = Color.Transparent;
+            controlPanelLabel.Font = new Font("Segoe UI", 12F, FontStyle.Underline, GraphicsUnit.Point, 204);
+            controlPanelLabel.Location = new Point(15, 13);
+            controlPanelLabel.Margin = new Padding(4, 0, 4, 0);
+            controlPanelLabel.Name = "controlPanelLabel";
+            controlPanelLabel.Size = new Size(450, 55);
+            controlPanelLabel.TabIndex = 0;
+            controlPanelLabel.Text = "Панель управления";
+            controlPanelLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // menuStrip1
+            // menuStrip
             // 
-            menuStrip1.ImageScalingSize = new Size(28, 28);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { programHelpToolStripMenuItem, aboutProgramToolStripMenuItem, управлениеToolStripMenuItem, closeProgramToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1443, 38);
-            menuStrip1.TabIndex = 4;
-            menuStrip1.Text = "menuStrip1";
+            menuStrip.ImageScalingSize = new Size(28, 28);
+            menuStrip.Items.AddRange(new ToolStripItem[] { programHelpToolStripMenuItem, aboutProgramToolStripMenuItem, анализСохранённныхРезультатовToolStripMenuItem, closeProgramToolStripMenuItem });
+            menuStrip.Location = new Point(0, 0);
+            menuStrip.Name = "menuStrip";
+            menuStrip.Size = new Size(1425, 38);
+            menuStrip.TabIndex = 4;
+            menuStrip.Text = "menuStrip1";
             // 
             // programHelpToolStripMenuItem
             // 
@@ -320,26 +445,12 @@
             aboutProgramToolStripMenuItem.Text = "О программе";
             aboutProgramToolStripMenuItem.Click += aboutProgramToolStripMenuItem_Click;
             // 
-            // управлениеToolStripMenuItem
+            // анализСохранённныхРезультатовToolStripMenuItem
             // 
-            управлениеToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { сгенерироватьТочкиToolStripMenuItem, очиститьТочкиToolStripMenuItem });
-            управлениеToolStripMenuItem.Name = "управлениеToolStripMenuItem";
-            управлениеToolStripMenuItem.Size = new Size(146, 34);
-            управлениеToolStripMenuItem.Text = "Управление";
-            // 
-            // сгенерироватьТочкиToolStripMenuItem
-            // 
-            сгенерироватьТочкиToolStripMenuItem.Name = "сгенерироватьТочкиToolStripMenuItem";
-            сгенерироватьТочкиToolStripMenuItem.Size = new Size(337, 40);
-            сгенерироватьТочкиToolStripMenuItem.Text = "Сгенерировать точки";
-            сгенерироватьТочкиToolStripMenuItem.Click += сгенерироватьТочкиToolStripMenuItem_Click;
-            // 
-            // очиститьТочкиToolStripMenuItem
-            // 
-            очиститьТочкиToolStripMenuItem.Name = "очиститьТочкиToolStripMenuItem";
-            очиститьТочкиToolStripMenuItem.Size = new Size(337, 40);
-            очиститьТочкиToolStripMenuItem.Text = "Очистить точки";
-            очиститьТочкиToolStripMenuItem.Click += очиститьТочкиToolStripMenuItem_Click;
+            анализСохранённныхРезультатовToolStripMenuItem.Name = "анализСохранённныхРезультатовToolStripMenuItem";
+            анализСохранённныхРезультатовToolStripMenuItem.Size = new Size(367, 34);
+            анализСохранённныхРезультатовToolStripMenuItem.Text = "Анализ сохранённных результатов";
+            анализСохранённныхРезультатовToolStripMenuItem.Click += анализСохранённныхРезультатовToolStripMenuItem_Click;
             // 
             // closeProgramToolStripMenuItem
             // 
@@ -352,31 +463,39 @@
             // 
             AutoScaleDimensions = new SizeF(12F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1443, 1000);
-            Controls.Add(panel2);
+            ClientSize = new Size(1425, 1092);
+            Controls.Add(controlPanel);
             Controls.Add(paintPanel);
-            Controls.Add(menuStrip1);
+            Controls.Add(menuStrip);
             DoubleBuffered = true;
-            MainMenuStrip = menuStrip1;
+            MainMenuStrip = menuStrip;
             Margin = new Padding(4);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "MainForm";
+            Text = "Основное окно";
             FormClosed += MainForm_FormClosed;
-            panel2.ResumeLayout(false);
-            panel2.PerformLayout();
-            panel6.ResumeLayout(false);
-            panel6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)cTrackBar).EndInit();
-            panel5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)scaleTrackBar).EndInit();
-            panel4.ResumeLayout(false);
+            controlPanel.ResumeLayout(false);
+            buttonsPanel.ResumeLayout(false);
+            resultPanel.ResumeLayout(false);
+            resultPanel.PerformLayout();
+            checkBoxPanel.ResumeLayout(false);
+            checkBoxPanel.PerformLayout();
+            circlePositionPanel.ResumeLayout(false);
+            circlePositionPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)yNumericUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)xNumericUpDown).EndInit();
+            pointCountPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pointsCountUpdown).EndInit();
-            panel3.ResumeLayout(false);
-            panel3.PerformLayout();
+            constantLinePanel.ResumeLayout(false);
+            constantLinePanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)cTrackBar).EndInit();
+            scalePpanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)scaleTrackBar).EndInit();
+            radiusPanel.ResumeLayout(false);
+            radiusPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)radiusTrackBar).EndInit();
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
+            menuStrip.ResumeLayout(false);
+            menuStrip.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -384,30 +503,38 @@
         #endregion
 
         private Panel paintPanel;
-        private Panel panel2;
-        private Label label1;
-        private Panel panel3;
+        private Panel controlPanel;
+        private Label controlPanelLabel;
+        private Panel radiusPanel;
         private Label radiusLabel;
         public TrackBar radiusTrackBar;
-        private Panel panel4;
+        private Panel pointCountPanel;
         private Label pointsCountLabel;
-        private Panel panel5;
+        private Panel scalePpanel;
         public TrackBar scaleTrackBar;
         private Label scaleLabel;
         private NumericUpDown pointsCountUpdown;
-        private Panel panel6;
+        private Panel constantLinePanel;
         public TrackBar cTrackBar;
         private Label cLabel;
         private Label realSquareLabel;
-        private Label MonteCarloSquare;
+        private Label monteCarloSquareLabel;
         private CheckBox horizontalCheckBox;
-        private MenuStrip menuStrip1;
+        private MenuStrip menuStrip;
         private ToolStripMenuItem programHelpToolStripMenuItem;
         private ToolStripMenuItem aboutProgramToolStripMenuItem;
         private ToolStripMenuItem closeProgramToolStripMenuItem;
-        private ToolStripMenuItem управлениеToolStripMenuItem;
-        private ToolStripMenuItem сгенерироватьТочкиToolStripMenuItem;
-        private ToolStripMenuItem очиститьТочкиToolStripMenuItem;
         private CheckBox showMessageCheckBox;
+        private Panel circlePositionPanel;
+        private Label yLabel;
+        private NumericUpDown yNumericUpDown;
+        private Label xLabel;
+        private NumericUpDown xNumericUpDown;
+        private ToolStripMenuItem анализСохранённныхРезультатовToolStripMenuItem;
+        private Panel checkBoxPanel;
+        private Panel resultPanel;
+        private Panel buttonsPanel;
+        private Button button1;
+        private Button button2;
     }
 }

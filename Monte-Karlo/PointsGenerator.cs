@@ -1,13 +1,16 @@
-﻿using System;
+﻿using Monte_Karlo.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Monte_Karlo
 {
     public static class PointsGenerator
     {
+        private static Mutex mutex = new();
         public static List<PointF> Points { get; private set; } = new();
 
         public static List<PointF> IncludedPoints { get; private set; } = new();
@@ -16,6 +19,7 @@ namespace Monte_Karlo
 
         public static async Task GenerateRandomPointsAsync(Circle circle, int count,  CancellationToken token = default)
         {
+            
             Point center = circle.circleCenter;
             float radius = circle.radius;
             Direction direction = circle.direction;
@@ -28,13 +32,26 @@ namespace Monte_Karlo
 
             await Task.Run(() =>
             {
+                var parallelOptions = new ParallelOptions { CancellationToken = token };
+                Generate(count, radius, parallelOptions);
+                token.ThrowIfCancellationRequested();
+                CalculateIncludedPoints(radius, parallelOptions);
+                token.ThrowIfCancellationRequested();
+                CalculateCuttedPoints(circle, parallelOptions);
+            }, token);
+        }
+
+        private static void Generate(int count, float radius, ParallelOptions parallelOptions)
+        {
+            try
+            {
+                mutex.WaitOne();
                 var threadLocalRandom = new ThreadLocal<Random>(() =>
                 {
                     int seed = Guid.NewGuid().GetHashCode();
                     return new Random(seed);
                 });
 
-                var parallelOptions = new ParallelOptions { CancellationToken = token };
                 Parallel.For(0, count, parallelOptions, (i) =>
                 {
                     float x = (float)threadLocalRandom.Value.NextDouble() * radius * 2 - radius;
@@ -44,12 +61,11 @@ namespace Monte_Karlo
                         Points.Add(new PointF(x, y));
                     }
                 });
-
-                token.ThrowIfCancellationRequested();
-                CalculateIncludedPoints(radius, parallelOptions);
-                token.ThrowIfCancellationRequested();
-                CalculateCuttedPoints(radius, center, direction, C, parallelOptions);
-            }, token);
+            }
+            finally
+            {
+                mutex.ReleaseMutex();
+            }
         }
 
         public static void ClearPoints()
@@ -81,47 +97,60 @@ namespace Monte_Karlo
             });
         }
 
-        public static void CalculateCuttedPoints(float radius, Point center, Direction direction,
-            float C, ParallelOptions parallelOptions)
+        public static void CalculateCuttedPoints(Circle circle, ParallelOptions parallelOptions)
         {
-            if (IncludedPoints.Count == 0) 
-                return;
-
-            if (direction == Direction.vertical)
+            try
             {
-                bool lefter = C < center.X;
-                float centerX = center.X;
+                mutex.WaitOne();
 
-                Parallel.ForEach(IncludedPoints, parallelOptions, point =>
+                if (IncludedPoints.Count == 0)
+                    return;
+
+                CuttedPoints.Clear();
+                Point center = circle.circleCenter;
+                Direction direction = circle.direction;
+                float C = circle.C;
+
+                if (direction == Direction.vertical)
                 {
-                    bool condition = lefter
-                        ? (point.X + centerX >= C)
-                        : (point.X + centerX <= C);
+                    bool lefter = C < center.X;
+                    float centerX = center.X;
 
-                    if (condition)
+                    Parallel.ForEach(IncludedPoints, parallelOptions, point =>
                     {
-                        lock (CuttedPoints) 
-                            CuttedPoints.Add(point);
-                    }
-                });
+                        bool condition = lefter
+                            ? (point.X + centerX >= C)
+                            : (point.X + centerX <= C);
+
+                        if (condition)
+                        {
+                            lock (CuttedPoints)
+                                CuttedPoints.Add(point);
+                        }
+                    });
+                }
+                else // horizontal
+                {
+                    bool downer = C < center.Y;
+                    float centerY = center.Y;
+
+                    Parallel.ForEach(IncludedPoints, parallelOptions, point =>
+                    {
+                        bool condition = downer
+                            ? (centerY + point.Y >= C)
+                            : (centerY + point.Y <= C);
+
+                        if (condition)
+                        {
+                            lock (CuttedPoints)
+                                CuttedPoints.Add(point);
+                        }
+                    });
+                }
             }
-            else // horizontal
+            finally
             {
-                bool downer = C < center.Y;
-                float centerY = center.Y;
-
-                Parallel.ForEach(IncludedPoints, parallelOptions, point =>
-                {
-                    bool condition = downer
-                        ? (centerY - point.Y >= C)
-                        : (centerY - point.Y <= C);
-
-                    if (condition)
-                    {
-                        lock (CuttedPoints) 
-                            CuttedPoints.Add(point);
-                    }
-                });
+                mutex.ReleaseMutex();
             }
         }
     }
