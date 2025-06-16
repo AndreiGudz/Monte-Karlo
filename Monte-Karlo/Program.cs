@@ -1,3 +1,6 @@
+using Monte_Karlo.DataBase;
+using Monte_Karlo.Models;
+
 namespace Monte_Karlo
 {
     internal static class Program

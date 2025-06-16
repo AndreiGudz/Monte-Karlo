@@ -1,4 +1,6 @@
-﻿using Monte_Karlo.Models;
+﻿using Monte_Karlo.Calculators;
+using Monte_Karlo.DataBase;
+using Monte_Karlo.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,6 +31,7 @@ namespace Monte_Karlo
                 BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
                 null, paintPanel, new object[] { true });
             InitializeControlPanel();
+            DatabaseHelper.InitializeDatabase();
         }
 
         private void InitializeControlPanel()
@@ -162,6 +165,13 @@ namespace Monte_Karlo
                 ShowAnswereMessage(realSquare, monteCarloSquare);
 
                 WriteResultOnLabels(realSquare, monteCarloSquare);
+                DatabaseHelper.SaveResults(
+                    circle,
+                    pointsCount,
+                    PointsGenerator.IncludedPoints.Count,
+                    PointsGenerator.CuttedPoints.Count,
+                    realSquare,
+                    monteCarloSquare);
             }
             catch (OperationCanceledException)
             {
@@ -195,6 +205,13 @@ namespace Monte_Karlo
 
                 ShowAnswereMessage(realSquare, monteCarloSquare);
                 WriteResultOnLabels(realSquare, monteCarloSquare);
+                DatabaseHelper.SaveResults(
+                    circle,
+                    pointsCount,
+                    PointsGenerator.IncludedPoints.Count,
+                    PointsGenerator.CuttedPoints.Count,
+                    realSquare,
+                    monteCarloSquare);
             }
             catch (OperationCanceledException)
             {
@@ -279,7 +296,9 @@ namespace Monte_Karlo
 
         private void анализСохранённныхРезультатовToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            var circleParam = DatabaseHelper.GetData(circle, pointsCount);
+            var form = new AnalysisForm(circleParam);
+            form.ShowDialog();
         }
 
         private void paintPanel_Resize(object sender, EventArgs e)

@@ -273,7 +273,7 @@
             // 
             pointsCountUpdown.Location = new Point(250, 13);
             pointsCountUpdown.Margin = new Padding(4);
-            pointsCountUpdown.Maximum = new decimal(new int[] { 1000000, 0, 0, 0 });
+            pointsCountUpdown.Maximum = new decimal(new int[] { 2000000, 0, 0, 0 });
             pointsCountUpdown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             pointsCountUpdown.Name = "pointsCountUpdown";
             pointsCountUpdown.Size = new Size(185, 35);

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Monte_Karlo
+namespace Monte_Karlo.Calculators
 {
     public class Calculator
     {
@@ -71,7 +71,7 @@ namespace Monte_Karlo
         public static double CalculateAbsoluteError(double expectedResult, double actualResult) => expectedResult - actualResult;
 
         public static double CalculateRelativeError(double expectedResult, double actualResult)
-        { 
+        {
             return Math.Abs(CalculateAbsoluteError(expectedResult, actualResult)) / actualResult * 100d;
         }
     }
