@@ -1,6 +1,7 @@
 ﻿using Monte_Karlo.Calculators;
 using Monte_Karlo.DataBase;
 using Monte_Karlo.Models;
+using Monte_Karlo.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,9 +19,11 @@ namespace Monte_Karlo
     {
         private CancellationTokenSource _generationCts;
         private float cofficient = 2, divisionScale = 0.5f;
-        public Circle circle = new Circle();
-
+        private Circle circle = new Circle();
         private int pointsCount = 100_000;
+
+        private GeneratorAsyncAction generateAction = PointsGenerator.GenerateRandomPointsAsync;
+        private GeneratorAsyncAction calculateCuttedAction = PointsGenerator.CalculateCuttedPointsAsync;
 
         public MainForm()
         {
@@ -75,7 +78,7 @@ namespace Monte_Karlo
             circle.radius = (float)radiusTrackBar.Value;
             SetCTrackBarBorders();
 
-            await GenerateRandomPoints();
+            await MonteCarloCalculate(generateAction);
         }
 
         private void SetCTrackBarBorders()
@@ -110,17 +113,20 @@ namespace Monte_Karlo
         {
             pointsCount = (int)pointsCountUpdown.Value;
 
-            await GenerateRandomPoints();
+            await MonteCarloCalculate(generateAction);
         }
 
         private async void cTrackbar_ValueChanged(object sender, EventArgs e)
         {
             circle.C = cTrackBar.Value * divisionScale;
             cLabel.Text = $"Значение C: {circle.C}";
-            await ViewCutedPoints();
+            await MonteCarloCalculate(calculateCuttedAction);
         }
 
-        private async void GeneratePointsButton_Click(object sender, EventArgs e) => await GenerateRandomPoints();
+        private async void btnGeneratePoints_Click(object sender, EventArgs e)
+        {
+            await MonteCarloCalculate(generateAction);
+        }
 
         private async void horizontalCheckBox_CheckedChanged(object sender, EventArgs e)
         {
@@ -130,60 +136,10 @@ namespace Monte_Karlo
                 circle.direction = Direction.horizontal;
 
             SetCTrackBarBorders();
-            await ViewCutedPoints();
+            await MonteCarloCalculate(calculateCuttedAction);
         }
 
-        private async Task ViewCutedPoints()
-        {
-            if (PointsGenerator.Points.Count == 0)
-            {
-                await GenerateRandomPoints();
-                return;
-            }
-
-            if (this.Visible != true)
-                return;
-
-            _generationCts?.Cancel();
-            _generationCts = new CancellationTokenSource();
-
-            try
-            {
-                var token = _generationCts.Token;
-                var parallelOptions = new ParallelOptions { CancellationToken = token };
-                await Task.Run(() =>
-                    PointsGenerator.CalculateCuttedPoints(circle, parallelOptions)
-                );
-                if (token.IsCancellationRequested)
-                    return;
-
-                paintPanel.Invalidate();
-
-                var realSquare = Calculator.CalculateAnalyticArea(circle);
-                var monteCarloSquare = Calculator.CalculateMonteCarloArea(circle.radius);
-
-                ShowAnswereMessage(realSquare, monteCarloSquare);
-
-                WriteResultOnLabels(realSquare, monteCarloSquare);
-                DatabaseHelper.SaveResults(
-                    circle,
-                    pointsCount,
-                    PointsGenerator.IncludedPoints.Count,
-                    PointsGenerator.CuttedPoints.Count,
-                    realSquare,
-                    monteCarloSquare);
-            }
-            catch (OperationCanceledException)
-            {
-                // Игнорируем отмену
-            }
-            catch (Exception ex)
-            {
-                ShowException(ex);
-            }
-        }
-
-        private async Task GenerateRandomPoints()
+        private async Task MonteCarloCalculate(GeneratorAsyncAction generatorAsyncAction)
         {
             if (this.Visible != true)
                 return;
@@ -194,7 +150,9 @@ namespace Monte_Karlo
             try
             {
                 var token = _generationCts.Token;
-                await PointsGenerator.GenerateRandomPointsAsync(circle, pointsCount, token);
+
+                await generatorAsyncAction(circle, pointsCount, token);
+
                 if (token.IsCancellationRequested)
                     return;
 
@@ -204,6 +162,7 @@ namespace Monte_Karlo
                 var monteCarloSquare = Calculator.CalculateMonteCarloArea(circle.radius);
 
                 ShowAnswereMessage(realSquare, monteCarloSquare);
+
                 WriteResultOnLabels(realSquare, monteCarloSquare);
                 DatabaseHelper.SaveResults(
                     circle,
@@ -225,13 +184,13 @@ namespace Monte_Karlo
 
         private void ShowException(Exception ex)
         {
-            MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(ex.Message + "\n" + ex.StackTrace, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void WriteResultOnLabels(double realSquare, double monteCarloSquare)
         {
-            realSquareLabel.Text = $"Площадь секции аналитически: {realSquare:F3}";
-            monteCarloSquareLabel.Text = $"Площадь методом Монте-Карло: {monteCarloSquare:F3}";
+            realSquareLabel.Text = $"Площадь секции аналитически: {realSquare:F4}";
+            monteCarloSquareLabel.Text = $"Площадь методом Монте-Карло: {monteCarloSquare:F4}";
         }
 
         private void ShowAnswereMessage(double realSquare, double monteCarloSquare)
@@ -242,12 +201,12 @@ namespace Monte_Karlo
             double roundRelativeError = Math.Round(Calculator.CalculateRelativeError(realSquare, monteCarloSquare), 3);
             double roundAbsoluteError = Math.Round(Calculator.CalculateAbsoluteError(realSquare, monteCarloSquare), 3);
             string message = $"""
-            Площадь круга: {Calculator.CircleSuare(circle.radius):F3}
+            Площадь круга: {Calculator.CircleSuare(circle.radius):F4}
             Всего точек: {PointsGenerator.Points.Count}
             Количество точек попавших в круг {PointsGenerator.IncludedPoints.Count}
             Количество точек в большей секции: {PointsGenerator.CuttedPoints.Count}
-            Площадь секции аналитически: {realSquare:F3}
-            Площадь секции методом Монте-Карло: {monteCarloSquare:F3}
+            Площадь секции аналитически: {realSquare:F4}
+            Площадь секции методом Монте-Карло: {monteCarloSquare:F4}
             Абсолютаня погрешность вычислений: {roundAbsoluteError}
             Относительная погрешность вычислений: {roundRelativeError}%
             """;
@@ -260,6 +219,7 @@ namespace Monte_Karlo
             Application.Exit();
         }
 
+        // TO DO
         private void programHelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -271,7 +231,7 @@ namespace Monte_Karlo
             form.ShowDialog();
         }
 
-        private void очиститьТочкиButton_Click(object sender, EventArgs e)
+        private void btnClear_Click(object sender, EventArgs e)
         {
             PointsGenerator.ClearPoints();
             paintPanel.Invalidate();
@@ -284,21 +244,28 @@ namespace Monte_Karlo
         {
             circle.circleCenter.X = (int)Math.Floor(xNumericUpDown.Value);
             SetCTrackBarBorders();
-            await ViewCutedPoints();
+            await MonteCarloCalculate(calculateCuttedAction);
         }
 
         private async void yNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             circle.circleCenter.Y = (int)Math.Floor(yNumericUpDown.Value);
             SetCTrackBarBorders();
-            await ViewCutedPoints();
+            await MonteCarloCalculate(calculateCuttedAction);
         }
 
-        private void анализСохранённныхРезультатовToolStripMenuItem_Click(object sender, EventArgs e)
+        private void analysisOfResultsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var circleParam = DatabaseHelper.GetData(circle, pointsCount);
-            var form = new AnalysisForm(circleParam);
-            form.ShowDialog();
+            try
+            {
+                var circleParam = DatabaseHelper.GetData(circle, pointsCount);
+                var form = new AnalysisForm(circleParam);
+                form.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                ShowException(ex);
+            }
         }
 
         private void paintPanel_Resize(object sender, EventArgs e)

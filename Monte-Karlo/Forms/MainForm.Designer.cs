@@ -28,11 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             paintPanel = new Panel();
             controlPanel = new Panel();
             buttonsPanel = new Panel();
-            button2 = new Button();
-            button1 = new Button();
+            btnClear = new Button();
+            btnGeneratePoints = new Button();
             resultPanel = new Panel();
             monteCarloSquareLabel = new Label();
             realSquareLabel = new Label();
@@ -60,7 +61,7 @@
             menuStrip = new MenuStrip();
             programHelpToolStripMenuItem = new ToolStripMenuItem();
             aboutProgramToolStripMenuItem = new ToolStripMenuItem();
-            анализСохранённныхРезультатовToolStripMenuItem = new ToolStripMenuItem();
+            analysisOfResultsToolStripMenuItem = new ToolStripMenuItem();
             closeProgramToolStripMenuItem = new ToolStripMenuItem();
             controlPanel.SuspendLayout();
             buttonsPanel.SuspendLayout();
@@ -116,32 +117,32 @@
             // buttonsPanel
             // 
             buttonsPanel.BackColor = SystemColors.ActiveCaption;
-            buttonsPanel.Controls.Add(button2);
-            buttonsPanel.Controls.Add(button1);
+            buttonsPanel.Controls.Add(btnClear);
+            buttonsPanel.Controls.Add(btnGeneratePoints);
             buttonsPanel.Location = new Point(15, 781);
             buttonsPanel.Name = "buttonsPanel";
             buttonsPanel.Size = new Size(450, 108);
             buttonsPanel.TabIndex = 4;
             // 
-            // button2
+            // btnClear
             // 
-            button2.Location = new Point(239, 13);
-            button2.Name = "button2";
-            button2.Size = new Size(196, 82);
-            button2.TabIndex = 1;
-            button2.Text = "Очистить\r\nточки";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += очиститьТочкиButton_Click;
+            btnClear.Location = new Point(239, 13);
+            btnClear.Name = "btnClear";
+            btnClear.Size = new Size(196, 82);
+            btnClear.TabIndex = 1;
+            btnClear.Text = "Очистить\r\nточки";
+            btnClear.UseVisualStyleBackColor = true;
+            btnClear.Click += btnClear_Click;
             // 
-            // button1
+            // btnGeneratePoints
             // 
-            button1.Location = new Point(15, 13);
-            button1.Name = "button1";
-            button1.Size = new Size(196, 82);
-            button1.TabIndex = 0;
-            button1.Text = "Генерировать\r\nточки";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += GeneratePointsButton_Click;
+            btnGeneratePoints.Location = new Point(15, 13);
+            btnGeneratePoints.Name = "btnGeneratePoints";
+            btnGeneratePoints.Size = new Size(196, 82);
+            btnGeneratePoints.TabIndex = 0;
+            btnGeneratePoints.Text = "Генерировать\r\nточки";
+            btnGeneratePoints.UseVisualStyleBackColor = true;
+            btnGeneratePoints.Click += btnGeneratePoints_Click;
             // 
             // resultPanel
             // 
@@ -424,7 +425,7 @@
             // menuStrip
             // 
             menuStrip.ImageScalingSize = new Size(28, 28);
-            menuStrip.Items.AddRange(new ToolStripItem[] { programHelpToolStripMenuItem, aboutProgramToolStripMenuItem, анализСохранённныхРезультатовToolStripMenuItem, closeProgramToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { programHelpToolStripMenuItem, aboutProgramToolStripMenuItem, analysisOfResultsToolStripMenuItem, closeProgramToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(1425, 38);
@@ -445,12 +446,12 @@
             aboutProgramToolStripMenuItem.Text = "О программе";
             aboutProgramToolStripMenuItem.Click += aboutProgramToolStripMenuItem_Click;
             // 
-            // анализСохранённныхРезультатовToolStripMenuItem
+            // analysisOfResultsToolStripMenuItem
             // 
-            анализСохранённныхРезультатовToolStripMenuItem.Name = "анализСохранённныхРезультатовToolStripMenuItem";
-            анализСохранённныхРезультатовToolStripMenuItem.Size = new Size(367, 34);
-            анализСохранённныхРезультатовToolStripMenuItem.Text = "Анализ сохранённных результатов";
-            анализСохранённныхРезультатовToolStripMenuItem.Click += анализСохранённныхРезультатовToolStripMenuItem_Click;
+            analysisOfResultsToolStripMenuItem.Name = "analysisOfResultsToolStripMenuItem";
+            analysisOfResultsToolStripMenuItem.Size = new Size(222, 34);
+            analysisOfResultsToolStripMenuItem.Text = "Анализ результатов";
+            analysisOfResultsToolStripMenuItem.Click += analysisOfResultsToolStripMenuItem_Click;
             // 
             // closeProgramToolStripMenuItem
             // 
@@ -468,6 +469,7 @@
             Controls.Add(paintPanel);
             Controls.Add(menuStrip);
             DoubleBuffered = true;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip;
             Margin = new Padding(4);
             Name = "MainForm";
@@ -530,11 +532,11 @@
         private NumericUpDown yNumericUpDown;
         private Label xLabel;
         private NumericUpDown xNumericUpDown;
-        private ToolStripMenuItem анализСохранённныхРезультатовToolStripMenuItem;
+        private ToolStripMenuItem analysisOfResultsToolStripMenuItem;
         private Panel checkBoxPanel;
         private Panel resultPanel;
         private Panel buttonsPanel;
-        private Button button1;
-        private Button button2;
+        private Button btnGeneratePoints;
+        private Button btnClear;
     }
 }

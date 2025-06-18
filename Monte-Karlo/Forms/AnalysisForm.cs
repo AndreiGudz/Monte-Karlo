@@ -2,6 +2,7 @@
 using Monte_Karlo.Calculators;
 using Monte_Karlo.DataBase;
 using Monte_Karlo.Models;
+using Monte_Karlo.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -40,68 +41,64 @@ namespace Monte_Karlo
         private void SetupDataGridView()
         {
             // Очищаем и настраиваем DataGridView
-            dataGridViewResults.AutoGenerateColumns = false;
             dataGridViewResults.Columns.Clear();
-            dataGridViewResults.DefaultCellStyle.Font = new Font("Segoe UI", 9);
-            dataGridViewResults.EnableHeadersVisualStyles = false;
-            dataGridViewResults.ColumnHeadersDefaultCellStyle.BackColor = Color.LightSteelBlue;
-            dataGridViewResults.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
-            dataGridViewResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewResults.RowHeadersVisible = false;
-            dataGridViewResults.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
             // Добавляем колонки с настройками
-            AddColumn("PointsInCircle", "Points in Circle", "PointsInCircle", false, "N0");
-            AddColumn("PointsInSegment", "Points in Segment", "PointsInSegment", false, "N0");
-            AddColumn("MonteCarloResult", "Monte-Carlo Result", "MonteCarloResult", true, "F4");
-            AddColumn("AnalyticalResult", "Analytical Result", "AnalyticalResult", true, "F4",
+            AddColumn("Id", "№", "Id", true, "D2", null, DataGridViewAutoSizeColumnMode.DisplayedCells);
+            AddColumn("PointsInCircle", "Точек в окружности", "PointsInCircle", true, "N0");
+            AddColumn("PointsInSegment", "Точек в сегменте", "PointsInSegment", true, "N0");
+            AddColumn("AnalyticalResult", "Аналитический резльтат", "AnalyticalResult", true, "F4",
                      _currentParams?.AnalyticalResult.ToString("F4") ?? "N/A");
-            AddColumn("ErrorPct", "Error (%)", "ErrorPct", true, "F2");
+            AddColumn("MonteCarloResult", "Результат Монте-Карло", "MonteCarloResult", true, "F4");
+            AddColumn("AbsoluteError", "Абсолютная ошибка", "AbsoluteError", true, "F2");
+            AddColumn("RelativeError", "Ошибка (%)", "RelativeError", true, "F2");
 
             if (_currentParams != null && _currentParams.Results.Any())
             {
                 // Создаем список с дополнительным полем Error
+                int id = 0;
                 var displayResults = _currentParams.Results
                     .OrderByDescending(r => r.Id)
                     .Select(r => new
                     {
+                        Id = ++id,
                         r.PointsInCircle,
                         r.PointsInSegment,
-                        r.MonteCarloResult,
                         AnalyticalResult = _currentParams.AnalyticalResult,
-                        ErrorPct = Calculator.CalculateRelativeError(_currentParams.AnalyticalResult, r.MonteCarloResult).ToString(),
+                        r.MonteCarloResult,
+                        AbsoluteError = Calculator.CalculateAbsoluteError(_currentParams.AnalyticalResult, r.MonteCarloResult).ToString(),
+                        RelativeError = Calculator.CalculateRelativeError(_currentParams.AnalyticalResult, r.MonteCarloResult).ToString()
                     })
                     .ToList();
 
-                var bindingSource = new BindingSource() { DataSource = displayResults};
+                var bindingSource = new BindingSource() { DataSource = displayResults };
                 dataGridViewResults.DataSource = bindingSource;
-
-                dataGridViewResults.ColumnHeaderMouseClick += DataGridViewResults_ColumnHeaderMouseClick;
-                // Настраиваем цветовое форматирование для колонки с ошибкой
-                dataGridViewResults.CellFormatting += (sender, e) =>
-                {
-                    if (e.ColumnIndex == dataGridViewResults.Columns["ErrorPct"].Index && e.Value != null)
-                    {
-                        double error = Convert.ToDouble(e.Value);
-                        e.CellStyle.ForeColor = error switch
-                        {
-                            > 10 => Color.Red,
-                            > 5 => Color.Orange,
-                            _ => Color.Green
-                        };
-                    }
-                };
             }
             else
             {
                 dataGridViewResults.DataSource = null;
-                dataGridViewResults.Columns["AnalyticalResult"].DefaultCellStyle.ForeColor = Color.Gray;
             }
         }
 
-        // Вспомогательный метод для добавления колонок
-        private void AddColumn(string name, string header, string dataPropertyName,
-                              bool isReadOnly, string format, object defaultValue = null)
+        // Настраиваем цветовое форматирование для колонки с ошибкой
+        private void DataGridViewResults_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
+        {
+            {
+                if (e.ColumnIndex == dataGridViewResults.Columns["RelativeError"].Index && e.Value != null)
+                {
+                    double error = Convert.ToDouble(e.Value);
+                    e.CellStyle.ForeColor = error switch
+                    {
+                        > 10 => Color.Red,
+                        > 5 => Color.Orange,
+                        _ => Color.Green
+                    };
+                }
+            };
+        }
+
+        private void AddColumn(string name, string header, string dataPropertyName, bool isReadOnly, string format,
+                               object defaultValue = null, DataGridViewAutoSizeColumnMode AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells)
         {
             var col = new DataGridViewTextBoxColumn
             {
@@ -114,7 +111,8 @@ namespace Monte_Karlo
                     Format = format,
                     Alignment = DataGridViewContentAlignment.MiddleRight
                 },
-                SortMode = DataGridViewColumnSortMode.Programmatic
+                SortMode = DataGridViewColumnSortMode.Programmatic,
+                AutoSizeMode = AutoSizeMode
             };
 
             if (defaultValue != null)
@@ -128,17 +126,11 @@ namespace Monte_Karlo
         private void DataGridViewResults_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             DataGridViewColumn column = dataGridViewResults.Columns[e.ColumnIndex];
-            ListSortDirection direction;
 
             // Определяем направление сортировки
-            if (column.HeaderCell.SortGlyphDirection == SortOrder.Ascending)
-            {
-                direction = ListSortDirection.Descending;
-            }
-            else
-            {
-                direction = ListSortDirection.Ascending;
-            }
+            ListSortDirection direction = column.HeaderCell.SortGlyphDirection == SortOrder.Ascending ?
+                ListSortDirection.Descending :
+                ListSortDirection.Ascending;
 
             // Сортируем данные
             SortData(column.Name, direction);
@@ -148,7 +140,7 @@ namespace Monte_Karlo
                 .ToList()
                 .ForEach(c => c.HeaderCell.SortGlyphDirection = SortOrder.None);
 
-            column.HeaderCell.SortGlyphDirection = direction == ListSortDirection.Ascending ?
+            dataGridViewResults.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = direction == ListSortDirection.Ascending ?
                 SortOrder.Ascending :
                 SortOrder.Descending;
         }
@@ -181,10 +173,15 @@ namespace Monte_Karlo
                             data.OrderBy(x => x.AnalyticalResult).ToList() :
                             data.OrderByDescending(x => x.AnalyticalResult).ToList();
                         break;
-                    case "ErrorPct":
+                    case "AbsoluteError":
                         bindingSource.DataSource = direction == ListSortDirection.Ascending ?
-                            data.OrderBy(x => x.ErrorPct).ToList() :
-                            data.OrderByDescending(x => x.ErrorPct).ToList();
+                            data.OrderBy(x => x.AbsoluteError).ToList() :
+                            data.OrderByDescending(x => x.AbsoluteError).ToList();
+                        break;
+                    case "RelativeError":
+                        bindingSource.DataSource = direction == ListSortDirection.Ascending ?
+                            data.OrderBy(x => x.RelativeError).ToList() :
+                            data.OrderByDescending(x => x.RelativeError).ToList();
                         break;
                     default:
                         bindingSource.DataSource = direction == ListSortDirection.Ascending ?
@@ -197,24 +194,28 @@ namespace Monte_Karlo
 
         private void CalculateStatistics()
         {
-            if (_results == null || _results.Count == 0) 
+            if (_results == null || _results.Count == 0)
                 return;
 
-            lblAnalisicResult.Text = _currentParams.AnalyticalResult.ToString("F4");
             var mcResults = _results.Select(r => r.MonteCarloResult).ToList();
+            double variance = StatisticCalculator.CalculateVariance(mcResults);
 
-            // Central tendency
+            lblAnalisicResult.Text = _currentParams.AnalyticalResult.ToString("F4");
             lblMean.Text = mcResults.Average().ToString("F4");
             lblMedian.Text = StatisticCalculator.CalculateMedian(mcResults).ToString("F4");
             lblMode.Text = StatisticCalculator.CalculateMode(mcResults).ToString("F4");
-
-            // Variability
-            double variance = StatisticCalculator.CalculateVariance(mcResults);
             lblVariance.Text = variance.ToString("F4");
             lblStdDev.Text = StatisticCalculator.CalculateStandardDeviation(variance).ToString("F4");
+            lblMinimum.Text = mcResults.Min().ToString("F4");
+            lblMaximum.Text = mcResults.Max().ToString("F4");
             lblRange.Text = StatisticCalculator.CalculateRange(mcResults).ToString("F4");
         }
 
-        
+        private void paintPanel_Paint(object sender, PaintEventArgs e)
+        {
+            AnalysisView.RenderAnalysis(paintPanel, e, _currentParams);
+
+            base.OnPaint(e);
+        }
     }
 }

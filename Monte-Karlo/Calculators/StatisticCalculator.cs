@@ -31,7 +31,7 @@ namespace Monte_Karlo.Calculators
         public static double CalculateVariance(List<double> values)
         {
             double mean = values.Average();
-            return values.Average(v => Math.Pow(v - mean, 2));
+            return values.Average(Xi => Math.Pow(mean - Xi, 2));
         }
 
         // Среднее отклонение

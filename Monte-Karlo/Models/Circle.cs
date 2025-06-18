@@ -13,6 +13,16 @@ namespace Monte_Karlo.Models
         public Direction direction = Direction.horizontal;
         public float C = 2;
 
+        public Circle() { }
+
+        public Circle(Point circleCenter, float radius, Direction direction, float c)
+        {
+            this.circleCenter = circleCenter;
+            this.radius = radius;
+            this.direction = direction;
+            this.C = c;
+        }
+
         public override bool Equals(object obj)
         {
             return obj is Circle other &&

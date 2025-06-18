@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Monte_Karlo
+namespace Monte_Karlo.View
 {
     public static class MonteCarloView
     {
-        public static int GridStep 
-        { 
+        public static int GridStep
+        {
             get => _gridStep;
             set
             {
@@ -21,6 +21,7 @@ namespace Monte_Karlo
         private static int _gridStep = 40;
         private static int _step = 80;
 
+        private static readonly Color _backgroundColor = Color.White;
         private static readonly Pen _gridPen = new(Color.LightGray, 1);
         private static readonly Pen _axisPen = new(Color.Black, 2);
 
@@ -41,7 +42,7 @@ namespace Monte_Karlo
 
         public static void RenderToBuffer(Panel panel, PaintEventArgs e, Circle circle)
         {
-            e.Graphics.Clear(Color.White);
+            e.Graphics.Clear(_backgroundColor);
             OnPaint(panel, e, circle.radius, circle.circleCenter, circle.direction, circle.C);
         }
 
@@ -122,7 +123,7 @@ namespace Monte_Karlo
             for (float x = origin.X; x <= panel.Width; x += _step)
             {
                 int digit = (int)Math.Round((x - origin.X) / _step);
-                if (digit == 0) 
+                if (digit == 0)
                     continue;
 
                 string text = digit.ToString();
@@ -156,12 +157,12 @@ namespace Monte_Karlo
                 }
             }
 
-            
+
             // вниз
             for (float y = origin.Y; y <= panel.Height; y += _step)
             {
                 int digit = -(int)Math.Round((y - origin.Y) / _step);
-                if (digit == 0) 
+                if (digit == 0)
                     continue;
 
                 string text = digit.ToString();
@@ -204,14 +205,14 @@ namespace Monte_Karlo
 
         private static void DrawPoints(Graphics g, PointF center, float gridStep)
         {
-/*            foreach (var point in PointsGenerator.ExcludedPoints)
-            {
-                g.DrawRectangle(_excludedPointsBrush, point.X * gridStep + center.X, center.Y - point.Y * gridStep, 1, 1);
-            }
-            foreach (var point in PointsGenerator.IncludedPoints)
-            {
-                g.DrawRectangle(_includedPointsBrush, point.X * gridStep + center.X, center.Y - point.Y * gridStep, 1, 1);
-            }*/
+            /*            foreach (var point in PointsGenerator.ExcludedPoints)
+                        {
+                            g.DrawRectangle(_excludedPointsBrush, point.X * gridStep + center.X, center.Y - point.Y * gridStep, 1, 1);
+                        }
+                        foreach (var point in PointsGenerator.IncludedPoints)
+                        {
+                            g.DrawRectangle(_includedPointsBrush, point.X * gridStep + center.X, center.Y - point.Y * gridStep, 1, 1);
+                        }*/
             foreach (var point in PointsGenerator.CuttedPoints)
             {
                 float screenX = center.X + point.X * gridStep;

@@ -8,59 +8,61 @@ using System.Threading.Tasks;
 
 namespace Monte_Karlo
 {
+    public delegate Task GeneratorAsyncAction(Circle circle, int count = 0, CancellationToken token = default);
+
     public static class PointsGenerator
     {
-        private static Mutex mutex = new();
         public static List<PointF> Points { get; private set; } = new();
-
         public static List<PointF> IncludedPoints { get; private set; } = new();
         public static List<PointF> ExcludedPoints { get; private set; } = new();
         public static List<PointF> CuttedPoints { get; private set; } = new();
+        
+        private static Mutex mutex = new();
 
-        public static async Task GenerateRandomPointsAsync(Circle circle, int count,  CancellationToken token = default)
-        {
-            
-            Point center = circle.circleCenter;
-            float radius = circle.radius;
-            Direction direction = circle.direction;
-            float C = circle.C;
-
-            Random random = new();
-            ClearPoints();
-
-            Points = new List<PointF>(count);
-
-            await Task.Run(() =>
-            {
-                var parallelOptions = new ParallelOptions { CancellationToken = token };
-                Generate(count, radius, parallelOptions);
-                token.ThrowIfCancellationRequested();
-                CalculateIncludedPoints(radius, parallelOptions);
-                token.ThrowIfCancellationRequested();
-                CalculateCuttedPoints(circle, parallelOptions);
-            }, token);
-        }
-
-        private static void Generate(int count, float radius, ParallelOptions parallelOptions)
+        public static async Task GenerateRandomPointsAsync(Circle circle, int count, CancellationToken token)
         {
             try
             {
                 mutex.WaitOne();
-                var threadLocalRandom = new ThreadLocal<Random>(() =>
-                {
-                    int seed = Guid.NewGuid().GetHashCode();
-                    return new Random(seed);
-                });
 
-                Parallel.For(0, count, parallelOptions, (i) =>
+                ClearPoints();
+                Points = new List<PointF>(count);
+
+                float radius = circle.radius;
+                Random random = new();
+
+                await Task.Run(() =>
                 {
-                    float x = (float)threadLocalRandom.Value.NextDouble() * radius * 2 - radius;
-                    float y = (float)threadLocalRandom.Value.NextDouble() * radius * 2 - radius;
-                    lock (Points)
-                    {
-                        Points.Add(new PointF(x, y));
-                    }
-                });
+                    var parallelOptions = new ParallelOptions { CancellationToken = token };
+                    Generate(count, radius, parallelOptions);
+                    token.ThrowIfCancellationRequested();
+                    CalculateIncludedPoints(radius, parallelOptions);
+                    token.ThrowIfCancellationRequested();
+                    CalculateCuttedPoints(circle, parallelOptions);
+                }, token);
+            }
+            finally
+            {
+                mutex.ReleaseMutex();
+            }
+        }
+
+        public static async Task CalculateCuttedPointsAsync(Circle circle, int count, CancellationToken token)
+        {
+            if (Points.Count == 0)
+            {
+                await GenerateRandomPointsAsync(circle, count, token);
+                return;
+            }
+
+            try
+            {
+                mutex.WaitOne();
+                await Task.Run(() =>
+                {
+                    var parallelOptions = new ParallelOptions { CancellationToken = token };
+                    CalculateCuttedPoints(circle, parallelOptions);
+                }, token);
             }
             finally
             {
@@ -76,6 +78,25 @@ namespace Monte_Karlo
             CuttedPoints.Clear();
         }
 
+        private static void Generate(int count, float radius, ParallelOptions parallelOptions)
+        {
+            var threadLocalRandom = new ThreadLocal<Random>(() =>
+            {
+                int seed = Guid.NewGuid().GetHashCode();
+                return new Random(seed);
+            });
+
+            Parallel.For(0, count, parallelOptions, (i) =>
+            {
+                float x = (float)threadLocalRandom.Value.NextDouble() * radius * 2 - radius;
+                float y = (float)threadLocalRandom.Value.NextDouble() * radius * 2 - radius;
+                lock (Points)
+                {
+                    Points.Add(new PointF(x, y));
+                }
+            });
+        }
+
         private static void CalculateIncludedPoints(float radius, ParallelOptions parallelOptions)
         {
             float radiusSquared = radius * radius;
@@ -86,71 +107,64 @@ namespace Monte_Karlo
 
                 if (distanceSquared < radiusSquared)
                 {
-                    lock (IncludedPoints) 
+                    lock (IncludedPoints)
                         IncludedPoints.Add(point);
                 }
                 else
                 {
-                    lock (ExcludedPoints) 
+                    lock (ExcludedPoints)
                         ExcludedPoints.Add(point);
                 }
             });
         }
 
-        public static void CalculateCuttedPoints(Circle circle, ParallelOptions parallelOptions)
+        private static void CalculateCuttedPoints(Circle circle, ParallelOptions parallelOptions)
         {
-            try
+
+
+            if (IncludedPoints.Count == 0)
+                return;
+
+            CuttedPoints.Clear();
+            Point center = circle.circleCenter;
+            Direction direction = circle.direction;
+            float C = circle.C;
+
+            if (direction == Direction.vertical)
             {
-                mutex.WaitOne();
+                bool lefter = C < center.X;
+                float centerX = center.X;
 
-                if (IncludedPoints.Count == 0)
-                    return;
-
-                CuttedPoints.Clear();
-                Point center = circle.circleCenter;
-                Direction direction = circle.direction;
-                float C = circle.C;
-
-                if (direction == Direction.vertical)
+                Parallel.ForEach(IncludedPoints, parallelOptions, point =>
                 {
-                    bool lefter = C < center.X;
-                    float centerX = center.X;
+                    bool condition = lefter
+                        ? (point.X + centerX >= C)
+                        : (point.X + centerX <= C);
 
-                    Parallel.ForEach(IncludedPoints, parallelOptions, point =>
+                    if (condition)
                     {
-                        bool condition = lefter
-                            ? (point.X + centerX >= C)
-                            : (point.X + centerX <= C);
-
-                        if (condition)
-                        {
-                            lock (CuttedPoints)
-                                CuttedPoints.Add(point);
-                        }
-                    });
-                }
-                else // horizontal
-                {
-                    bool downer = C < center.Y;
-                    float centerY = center.Y;
-
-                    Parallel.ForEach(IncludedPoints, parallelOptions, point =>
-                    {
-                        bool condition = downer
-                            ? (centerY + point.Y >= C)
-                            : (centerY + point.Y <= C);
-
-                        if (condition)
-                        {
-                            lock (CuttedPoints)
-                                CuttedPoints.Add(point);
-                        }
-                    });
-                }
+                        lock (CuttedPoints)
+                            CuttedPoints.Add(point);
+                    }
+                });
             }
-            finally
+            else // horizontal
             {
-                mutex.ReleaseMutex();
+                bool downer = C < center.Y;
+                float centerY = center.Y;
+
+                Parallel.ForEach(IncludedPoints, parallelOptions, point =>
+                {
+                    bool condition = downer
+                        ? (centerY + point.Y >= C)
+                        : (centerY + point.Y <= C);
+
+                    if (condition)
+                    {
+                        lock (CuttedPoints)
+                            CuttedPoints.Add(point);
+                    }
+                });
             }
         }
     }
