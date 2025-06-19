@@ -40,6 +40,7 @@ namespace Monte_Karlo.Calculators
             return Math.Sqrt(variance);
         }
 
+        // Среднее отклонение через список
         public static double CalculateStandardDeviation(List<double> values)
         {
             return CalculateStandardDeviation(CalculateVariance(values));

@@ -6,20 +6,20 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Monte_Karlo
+namespace Monte_Karlo.Utilites
 {
     public delegate Task GeneratorAsyncAction(Circle circle, int count = 0, CancellationToken token = default);
 
-    public static class PointsGenerator
+    public class PointsGenerator
     {
-        public static List<PointF> Points { get; private set; } = new();
-        public static List<PointF> IncludedPoints { get; private set; } = new();
-        public static List<PointF> ExcludedPoints { get; private set; } = new();
-        public static List<PointF> CuttedPoints { get; private set; } = new();
-        
-        private static Mutex mutex = new();
+        public List<PointF> Points { get; private set; } = new();
+        public List<PointF> IncludedPoints { get; private set; } = new();
+        public List<PointF> ExcludedPoints { get; private set; } = new();
+        public List<PointF> CuttedPoints { get; private set; } = new();
 
-        public static async Task GenerateRandomPointsAsync(Circle circle, int count, CancellationToken token)
+        private Mutex mutex = new();
+
+        public async Task GenerateRandomPointsAsync(Circle circle, int count, CancellationToken token)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Monte_Karlo
             }
         }
 
-        public static async Task CalculateCuttedPointsAsync(Circle circle, int count, CancellationToken token)
+        public async Task CalculateCuttedPointsAsync(Circle circle, int count, CancellationToken token)
         {
             if (Points.Count == 0)
             {
@@ -70,7 +70,7 @@ namespace Monte_Karlo
             }
         }
 
-        public static void ClearPoints()
+        public void ClearPoints()
         {
             Points.Clear();
             IncludedPoints.Clear();
@@ -78,7 +78,7 @@ namespace Monte_Karlo
             CuttedPoints.Clear();
         }
 
-        private static void Generate(int count, float radius, ParallelOptions parallelOptions)
+        private void Generate(int count, float radius, ParallelOptions parallelOptions)
         {
             var threadLocalRandom = new ThreadLocal<Random>(() =>
             {
@@ -97,7 +97,7 @@ namespace Monte_Karlo
             });
         }
 
-        private static void CalculateIncludedPoints(float radius, ParallelOptions parallelOptions)
+        private void CalculateIncludedPoints(float radius, ParallelOptions parallelOptions)
         {
             float radiusSquared = radius * radius;
 
@@ -118,7 +118,7 @@ namespace Monte_Karlo
             });
         }
 
-        private static void CalculateCuttedPoints(Circle circle, ParallelOptions parallelOptions)
+        private void CalculateCuttedPoints(Circle circle, ParallelOptions parallelOptions)
         {
 
 
@@ -138,8 +138,8 @@ namespace Monte_Karlo
                 Parallel.ForEach(IncludedPoints, parallelOptions, point =>
                 {
                     bool condition = lefter
-                        ? (point.X + centerX >= C)
-                        : (point.X + centerX <= C);
+                        ? point.X + centerX >= C
+                        : point.X + centerX <= C;
 
                     if (condition)
                     {
@@ -156,8 +156,8 @@ namespace Monte_Karlo
                 Parallel.ForEach(IncludedPoints, parallelOptions, point =>
                 {
                     bool condition = downer
-                        ? (centerY + point.Y >= C)
-                        : (centerY + point.Y <= C);
+                        ? centerY + point.Y >= C
+                        : centerY + point.Y <= C;
 
                     if (condition)
                     {

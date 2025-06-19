@@ -17,10 +17,12 @@ namespace Monte_Karlo
     {
         private List<SimulationResult> _results = new List<SimulationResult>();
         private CircleParams _currentParams;
+        private AnalysisView _view;
 
         public AnalysisForm()
         {
             InitializeComponent();
+            _view = new AnalysisView();
         }
 
         public AnalysisForm(CircleParams circleParams) : this()
@@ -213,7 +215,7 @@ namespace Monte_Karlo
 
         private void paintPanel_Paint(object sender, PaintEventArgs e)
         {
-            AnalysisView.RenderAnalysis(paintPanel, e, _currentParams);
+            _view.RenderAnalysis(paintPanel, e, _currentParams);
 
             base.OnPaint(e);
         }

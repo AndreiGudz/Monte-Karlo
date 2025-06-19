@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-public static class AnalysisView
+public class AnalysisView
 {
     // Цвета элементов
     private static readonly Color _analyticalColor = Color.Blue;
@@ -23,7 +23,7 @@ public static class AnalysisView
     private static readonly System.Drawing.Font _textFont = SystemFonts.DefaultFont;
     private static readonly Brush _textBrush = Brushes.Black;
 
-    public static void RenderAnalysis(Panel panel, PaintEventArgs e, CircleParams circleParams)
+    public void RenderAnalysis(Panel panel, PaintEventArgs e, CircleParams circleParams)
     {
         if (circleParams == null || circleParams.Results == null || circleParams.Results.Count == 0)
             return;
@@ -33,12 +33,11 @@ public static class AnalysisView
         OnPaint(panel, g, circleParams);
     }
 
-    private static void OnPaint(Panel panel, Graphics g, CircleParams circleParams)
+    private void OnPaint(Panel panel, Graphics g, CircleParams circleParams)
     {
         List<double> mcResults = circleParams.Results.Select(r => r.MonteCarloResult).ToList();
         double analyticalValue = circleParams.AnalyticalResult;
 
-        // Рассчитываем статистики
         double mean = mcResults.Average();
         double mode = StatisticCalculator.CalculateMode(mcResults);
         double min = mcResults.Min();
@@ -63,7 +62,7 @@ public static class AnalysisView
         DrawLegend(g, plotArea, mode);
     }
 
-    private static void DrawGrid(Graphics g, Rectangle plotArea, int pointsCount, double yMin, double yMax)
+    private void DrawGrid(Graphics g, Rectangle plotArea, int pointsCount, double yMin, double yMax)
     {
         Pen girdPen = new Pen(_gridColor);
 
@@ -81,6 +80,10 @@ public static class AnalysisView
             SizeF textSize = g.MeasureString(text, _textFont);
             float textX = x - textSize.Width / 2;
             float textY = plotArea.Bottom - textSize.Height;
+
+            // особое расположение для 0
+            if (i == 0)
+                textX += textSize.Width;
 
             g.DrawString(text, _textFont, _textBrush, textX, textY);
         }
@@ -104,37 +107,44 @@ public static class AnalysisView
 
     }
 
-    private static void DrawAnalyticalLine(Graphics g, Rectangle area, double value, double yMin, double yRange)
+    private void DrawAnalyticalLine(Graphics g, Rectangle area, double value, double yMin, double yRange)
     {
         float y = area.Bottom - (float)((value - yMin) / yRange * area.Height);
         g.DrawLine(new Pen(_analyticalColor, 2), area.Left, y, area.Right, y);
     }
 
-    private static void DrawMonteCarloPoints(Graphics g, Rectangle area, List<double> results, double yMin, double yRange)
+    private void DrawMonteCarloPoints(Graphics g, Rectangle area, List<double> results, double yMin, double yRange)
     {
         for (int i = 0; i < results.Count; i++)
         {
-            float x = area.Left + area.Width * i / (results.Count - 1);
-            float y = area.Bottom - (float)((results[i] - yMin) / yRange * area.Height);
-            g.FillEllipse(new SolidBrush(_pointsColor), x - 2, y - 2, 4, 4);
+            try
+            {
+                float x = area.Left + area.Width * i / (results.Count - 1);
+                float y = area.Bottom - (float)((results[i] - yMin) / yRange * area.Height);
+                g.FillEllipse(new SolidBrush(_pointsColor), x - 2, y - 2, 4, 4);
+            }
+            catch (DivideByZeroException ex)
+            {
+                MessageBox.Show("Слишком мало данных измерений");
+            }
         }
     }
 
-    private static void DrawMeanLine(Graphics g, Rectangle area, double value, double yMin, double yRange)
+    private void DrawMeanLine(Graphics g, Rectangle area, double value, double yMin, double yRange)
     {
         float y = area.Bottom - (float)((value - yMin) / yRange * area.Height);
         g.DrawLine(new Pen(_meanColor, 1) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash },
                   area.Left, y, area.Right, y);
     }
 
-    private static void DrawModeLine(Graphics g, Rectangle area, double value, double yMin, double yRange)
+    private void DrawModeLine(Graphics g, Rectangle area, double value, double yMin, double yRange)
     {
         float y = area.Bottom - (float)((value - yMin) / yRange * area.Height);
         g.DrawLine(new Pen(_modeColor, 1) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dot },
                   area.Left, y, area.Right, y);
     }
 
-    private static void DrawMinMaxLines(Graphics g, Rectangle area, double min, double max, double yMin, double yRange)
+    private void DrawMinMaxLines(Graphics g, Rectangle area, double min, double max, double yMin, double yRange)
     {
         float yMinPos = area.Bottom - (float)((min - yMin) / yRange * area.Height);
         float yMaxPos = area.Bottom - (float)((max - yMin) / yRange * area.Height);
@@ -143,25 +153,26 @@ public static class AnalysisView
         g.DrawLine(new Pen(_minMaxColor, 1), area.Left, yMaxPos, area.Right, yMaxPos);
     }
 
-    private static void DrawLegend(Graphics g, Rectangle area, double mode)
+    private void DrawLegend(Graphics g, Rectangle area, double mode)
     {
         SizeF textSize = g.MeasureString("Аналитическое решение", _textFont);
-        float startX = area.Width - textSize.Width;
+        float boxWidth = 20;
+        float startX = area.Width - textSize.Width - boxWidth - 5;
         float startY = area.Top;
         float itemHeight = textSize.Height;
 
-        DrawLegendItem(g, "Аналитическое решение", _analyticalColor, startX, startY);
-        DrawLegendItem(g, "Точки Монте-Карло", _pointsColor, startX, startY + itemHeight);
-        DrawLegendItem(g, "Среднее значение", _meanColor, startX, startY + itemHeight * 2);
-        DrawLegendItem(g, "Мода", _modeColor, startX, startY + itemHeight * 3);
-        DrawLegendItem(g, "Минимум/Максимум", _minMaxColor, startX, startY + itemHeight * 4);
+        DrawLegendItem(g, "Аналитическое решение", _analyticalColor, startX, startY, boxWidth, itemHeight);
+        DrawLegendItem(g, "Точки Монте-Карло", _pointsColor, startX, startY + itemHeight, boxWidth, itemHeight);
+        DrawLegendItem(g, "Среднее значение", _meanColor, startX, startY + itemHeight * 2, boxWidth, itemHeight);
+        DrawLegendItem(g, "Мода", _modeColor, startX, startY + itemHeight * 3, boxWidth, itemHeight);
+        DrawLegendItem(g, "Минимум/Максимум", _minMaxColor, startX, startY + itemHeight * 4, boxWidth, itemHeight);
     }
 
-    private static void DrawLegendItem(Graphics g, string text, Color color, float x, float y)
+    private void DrawLegendItem(Graphics g, string text, Color color, float x, float y, float boxWidth, float boxHeight)
     {
-        const float boxSize = 15;
-        g.FillRectangle(new SolidBrush(color), x, y, boxSize, boxSize / 2);
-        g.DrawRectangle(Pens.Black, x, y, boxSize, boxSize / 2);
-        g.DrawString(text, _textFont, _textBrush, x + boxSize + 5, y);
+        SizeF textSize = g.MeasureString("Аналитическое решение", _textFont);
+        g.FillRectangle(new SolidBrush(color), x, y + 1, boxWidth, boxHeight - 2);
+        g.DrawRectangle(Pens.Black, x, y + 1, boxWidth, boxHeight - 2);
+        g.DrawString(text, _textFont, _textBrush, x + boxWidth + 5, y);
     }
 }

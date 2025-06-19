@@ -1,4 +1,5 @@
 ﻿using Monte_Karlo.Models;
+using Monte_Karlo.Utilites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Monte_Karlo.View
 {
-    public static class MonteCarloView
+    public class MonteCarloView
     {
-        public static int GridStep
+        public int GridStep
         {
             get => _gridStep;
             set
@@ -18,8 +19,9 @@ namespace Monte_Karlo.View
                 _step = _gridStep * 2;
             }
         }
-        private static int _gridStep = 40;
-        private static int _step = 80;
+        public PointsGenerator pointsGenerator;
+        private int _gridStep = 40;
+        private int _step = 80;
 
         private static readonly Color _backgroundColor = Color.White;
         private static readonly Pen _gridPen = new(Color.LightGray, 1);
@@ -40,13 +42,13 @@ namespace Monte_Karlo.View
 
 
 
-        public static void RenderToBuffer(Panel panel, PaintEventArgs e, Circle circle)
+        public void RenderToBuffer(Panel panel, PaintEventArgs e, Circle circle)
         {
             e.Graphics.Clear(_backgroundColor);
             OnPaint(panel, e, circle.radius, circle.circleCenter, circle.direction, circle.C);
         }
 
-        private static void OnPaint(Panel panel, PaintEventArgs e, float radius, Point circleCenter, Direction direction, float C)
+        private void OnPaint(Panel panel, PaintEventArgs e, float radius, Point circleCenter, Direction direction, float C)
         {
             var g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
@@ -70,7 +72,7 @@ namespace Monte_Karlo.View
             DrawCutter(panel, g, origin, direction, C);
         }
 
-        private static void DrawGrid(Panel panel, Graphics g, PointF origin)
+        private void DrawGrid(Panel panel, Graphics g, PointF origin)
         {
             // Вертикальные линии
             for (float x = origin.X; x >= 0; x -= _gridStep)
@@ -93,12 +95,12 @@ namespace Monte_Karlo.View
             }
         }
 
-        private static void DrawAxis(Panel panel, Graphics g, PointF center)
+        private void DrawAxis(Panel panel, Graphics g, PointF center)
         {
             g.DrawLine(_axisPen, 0, center.Y, panel.Width, center.Y);
             g.DrawLine(_axisPen, center.X, 0, center.X, panel.Height);
         }
-        private static void DrawCoordinateNumbers(Panel panel, Graphics g, PointF origin)
+        private void DrawCoordinateNumbers(Panel panel, Graphics g, PointF origin)
         {
             // Числа на оси X
             // влево
@@ -179,23 +181,23 @@ namespace Monte_Karlo.View
             g.DrawString("0", _textFont, _textBrush, origin.X + 5, origin.Y + 5);
         }
 
-        private static bool TextInPanel(Panel panel, SizeF textSize, float textX = 0, float textY = 0)
+        private bool TextInPanel(Panel panel, SizeF textSize, float textX = 0, float textY = 0)
         {
             bool xIn = textX >= 0 && textX + textSize.Width <= panel.Width;
             bool yIn = textY >= 0 && textY + textSize.Height <= panel.Height;
             return xIn && yIn;
         }
 
-        private static void DrawRectangle(Graphics g, PointF square, float squareSize)
+        private void DrawRectangle(Graphics g, PointF square, float squareSize)
         {
             g.DrawRectangle(_squarePen, square.X, square.Y, squareSize, squareSize);
         }
-        private static void DrawEllipse(Graphics g, PointF square, float squareSize)
+        private void DrawEllipse(Graphics g, PointF square, float squareSize)
         {
             g.DrawEllipse(_circlePen, square.X, square.Y, squareSize, squareSize);
         }
 
-        private static void DrawCutter(Panel panel, Graphics g, PointF center, Direction direction, float C)
+        private void DrawCutter(Panel panel, Graphics g, PointF center, Direction direction, float C)
         {
             if (direction == Direction.horizontal)
                 g.DrawLine(_cutterPen, 0, center.Y + _step * -C, panel.Width, center.Y + _step * -C);
@@ -203,7 +205,7 @@ namespace Monte_Karlo.View
                 g.DrawLine(_cutterPen, center.X + _step * C, 0, center.X + _step * C, panel.Height);
         }
 
-        private static void DrawPoints(Graphics g, PointF center, float gridStep)
+        private void DrawPoints(Graphics g, PointF center, float gridStep)
         {
             /*            foreach (var point in PointsGenerator.ExcludedPoints)
                         {
@@ -213,7 +215,7 @@ namespace Monte_Karlo.View
                         {
                             g.DrawRectangle(_includedPointsBrush, point.X * gridStep + center.X, center.Y - point.Y * gridStep, 1, 1);
                         }*/
-            foreach (var point in PointsGenerator.CuttedPoints)
+            foreach (var point in pointsGenerator.CuttedPoints)
             {
                 float screenX = center.X + point.X * gridStep;
                 float screenY = center.Y - point.Y * gridStep;

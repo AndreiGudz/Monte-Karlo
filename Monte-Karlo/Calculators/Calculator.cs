@@ -60,10 +60,8 @@ namespace Monte_Karlo.Calculators
 
         public static double CircleSuare(double R) => Math.PI * R * R;
 
-        public static double CalculateMonteCarloArea(float radius)
+        public static double CalculateMonteCarloArea(float radius, int allPoints, int cuttedPoints)
         {
-            int allPoints = PointsGenerator.Points.Count;
-            int cuttedPoints = PointsGenerator.CuttedPoints.Count;
             double squareArea = 4 * radius * radius;
             return cuttedPoints / (double)allPoints * squareArea;
         }

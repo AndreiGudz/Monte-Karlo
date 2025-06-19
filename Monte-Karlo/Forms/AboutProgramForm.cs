@@ -20,17 +20,6 @@ namespace Monte_Karlo
             versionLabel.Text = $"Версия: {version.Major}.{version.Minor}.{version.Build}.{version.MinorRevision}";
         }
 
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-
-            ControlPaint.DrawBorder(e.Graphics, this.ClientRectangle,
-                Color.LightGray, 1, ButtonBorderStyle.Solid,
-                Color.LightGray, 1, ButtonBorderStyle.Solid,
-                Color.LightGray, 1, ButtonBorderStyle.Solid,
-                Color.LightGray, 1, ButtonBorderStyle.Solid);
-        }
-
         private void closeButton_Click(object sender, EventArgs e)
         {
             this.Close();

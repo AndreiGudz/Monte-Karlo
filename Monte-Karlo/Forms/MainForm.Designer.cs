@@ -97,7 +97,7 @@
             // 
             controlPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             controlPanel.AutoScroll = true;
-            controlPanel.BackColor = SystemColors.ActiveBorder;
+            controlPanel.BackColor = SystemColors.ActiveCaption;
             controlPanel.BorderStyle = BorderStyle.Fixed3D;
             controlPanel.Controls.Add(buttonsPanel);
             controlPanel.Controls.Add(resultPanel);
@@ -156,21 +156,21 @@
             // 
             // monteCarloSquareLabel
             // 
-            monteCarloSquareLabel.AutoSize = true;
+            monteCarloSquareLabel.BackColor = Color.White;
             monteCarloSquareLabel.Location = new Point(15, 58);
             monteCarloSquareLabel.Margin = new Padding(4, 0, 4, 0);
             monteCarloSquareLabel.Name = "monteCarloSquareLabel";
-            monteCarloSquareLabel.Size = new Size(332, 30);
+            monteCarloSquareLabel.Size = new Size(420, 40);
             monteCarloSquareLabel.TabIndex = 3;
             monteCarloSquareLabel.Text = "Площадь методом Монте-Карло:";
             // 
             // realSquareLabel
             // 
-            realSquareLabel.AutoSize = true;
-            realSquareLabel.Location = new Point(15, 14);
+            realSquareLabel.BackColor = Color.White;
+            realSquareLabel.Location = new Point(15, 17);
             realSquareLabel.Margin = new Padding(4, 0, 4, 0);
             realSquareLabel.Name = "realSquareLabel";
-            realSquareLabel.Size = new Size(319, 30);
+            realSquareLabel.Size = new Size(420, 40);
             realSquareLabel.TabIndex = 2;
             realSquareLabel.Text = "Площадь секции аналитически:";
             // 
@@ -186,27 +186,27 @@
             // 
             // showMessageCheckBox
             // 
-            showMessageCheckBox.AutoSize = true;
+            showMessageCheckBox.BackColor = Color.White;
             showMessageCheckBox.CheckAlign = ContentAlignment.MiddleRight;
-            showMessageCheckBox.Location = new Point(15, 56);
+            showMessageCheckBox.Location = new Point(15, 52);
             showMessageCheckBox.Name = "showMessageCheckBox";
-            showMessageCheckBox.Size = new Size(376, 34);
+            showMessageCheckBox.Size = new Size(420, 40);
             showMessageCheckBox.TabIndex = 6;
             showMessageCheckBox.Text = "Показывать результат вычислений";
-            showMessageCheckBox.UseVisualStyleBackColor = true;
+            showMessageCheckBox.UseVisualStyleBackColor = false;
             // 
             // horizontalCheckBox
             // 
-            horizontalCheckBox.AutoSize = true;
+            horizontalCheckBox.BackColor = Color.White;
             horizontalCheckBox.CheckAlign = ContentAlignment.MiddleRight;
             horizontalCheckBox.Checked = true;
             horizontalCheckBox.CheckState = CheckState.Checked;
-            horizontalCheckBox.Location = new Point(15, 16);
+            horizontalCheckBox.Location = new Point(15, 11);
             horizontalCheckBox.Name = "horizontalCheckBox";
-            horizontalCheckBox.Size = new Size(339, 34);
+            horizontalCheckBox.Size = new Size(420, 40);
             horizontalCheckBox.TabIndex = 5;
             horizontalCheckBox.Text = "Направление горизонтальное: ";
-            horizontalCheckBox.UseVisualStyleBackColor = true;
+            horizontalCheckBox.UseVisualStyleBackColor = false;
             horizontalCheckBox.CheckedChanged += horizontalCheckBox_CheckedChanged;
             // 
             // circlePositionPanel
@@ -223,39 +223,41 @@
             // 
             // yLabel
             // 
-            yLabel.AutoSize = true;
+            yLabel.BackColor = Color.White;
             yLabel.Font = new Font("Segoe UI", 12F);
-            yLabel.Location = new Point(250, 15);
+            yLabel.Location = new Point(249, 15);
             yLabel.Name = "yLabel";
-            yLabel.Size = new Size(38, 38);
+            yLabel.Size = new Size(41, 39);
             yLabel.TabIndex = 3;
             yLabel.Text = "Y:";
             // 
             // yNumericUpDown
             // 
+            yNumericUpDown.Font = new Font("Segoe UI", 10F);
             yNumericUpDown.Location = new Point(295, 15);
             yNumericUpDown.Minimum = new decimal(new int[] { 100, 0, 0, int.MinValue });
             yNumericUpDown.Name = "yNumericUpDown";
-            yNumericUpDown.Size = new Size(140, 35);
+            yNumericUpDown.Size = new Size(140, 39);
             yNumericUpDown.TabIndex = 2;
             yNumericUpDown.ValueChanged += yNumericUpDown_ValueChanged;
             // 
             // xLabel
             // 
-            xLabel.AutoSize = true;
+            xLabel.BackColor = Color.White;
             xLabel.Font = new Font("Segoe UI", 12F);
             xLabel.Location = new Point(15, 15);
             xLabel.Name = "xLabel";
-            xLabel.Size = new Size(40, 38);
+            xLabel.Size = new Size(41, 39);
             xLabel.TabIndex = 1;
-            xLabel.Text = "X:";
+            xLabel.Text = "X: ";
             // 
             // xNumericUpDown
             // 
-            xNumericUpDown.Location = new Point(60, 15);
+            xNumericUpDown.Font = new Font("Segoe UI", 10F);
+            xNumericUpDown.Location = new Point(61, 15);
             xNumericUpDown.Minimum = new decimal(new int[] { 100, 0, 0, int.MinValue });
             xNumericUpDown.Name = "xNumericUpDown";
-            xNumericUpDown.Size = new Size(140, 35);
+            xNumericUpDown.Size = new Size(140, 39);
             xNumericUpDown.TabIndex = 0;
             xNumericUpDown.ValueChanged += xNumericUpDown_ValueChanged;
             // 
@@ -286,7 +288,7 @@
             // 
             // pointsCountLabel
             // 
-            pointsCountLabel.BackColor = SystemColors.ActiveBorder;
+            pointsCountLabel.BackColor = Color.White;
             pointsCountLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
             pointsCountLabel.Location = new Point(15, 8);
             pointsCountLabel.Margin = new Padding(4, 0, 4, 0);
@@ -309,7 +311,7 @@
             // 
             // cTrackBar
             // 
-            cTrackBar.BackColor = SystemColors.ActiveBorder;
+            cTrackBar.BackColor = Color.White;
             cTrackBar.LargeChange = 1;
             cTrackBar.Location = new Point(15, 55);
             cTrackBar.Margin = new Padding(4);
@@ -323,9 +325,9 @@
             // 
             // cLabel
             // 
-            cLabel.BackColor = SystemColors.ActiveBorder;
+            cLabel.BackColor = Color.White;
             cLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            cLabel.Location = new Point(15, 9);
+            cLabel.Location = new Point(15, 14);
             cLabel.Margin = new Padding(4, 0, 4, 0);
             cLabel.Name = "cLabel";
             cLabel.Size = new Size(420, 40);
@@ -347,7 +349,7 @@
             // scaleTrackBar
             // 
             scaleTrackBar.AutoSize = false;
-            scaleTrackBar.BackColor = SystemColors.ActiveBorder;
+            scaleTrackBar.BackColor = Color.White;
             scaleTrackBar.Location = new Point(15, 51);
             scaleTrackBar.Margin = new Padding(4);
             scaleTrackBar.Maximum = 150;
@@ -363,9 +365,9 @@
             // 
             // scaleLabel
             // 
-            scaleLabel.BackColor = SystemColors.ActiveBorder;
+            scaleLabel.BackColor = Color.White;
             scaleLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            scaleLabel.Location = new Point(15, 5);
+            scaleLabel.Location = new Point(15, 10);
             scaleLabel.Margin = new Padding(4, 0, 4, 0);
             scaleLabel.Name = "scaleLabel";
             scaleLabel.Size = new Size(420, 40);
@@ -386,9 +388,9 @@
             // 
             // radiusTrackBar
             // 
-            radiusTrackBar.BackColor = SystemColors.ActiveBorder;
+            radiusTrackBar.BackColor = Color.White;
             radiusTrackBar.LargeChange = 1;
-            radiusTrackBar.Location = new Point(15, 54);
+            radiusTrackBar.Location = new Point(15, 52);
             radiusTrackBar.Margin = new Padding(4);
             radiusTrackBar.Maximum = 20;
             radiusTrackBar.Minimum = 1;
@@ -400,9 +402,9 @@
             // 
             // radiusLabel
             // 
-            radiusLabel.BackColor = SystemColors.ActiveBorder;
+            radiusLabel.BackColor = Color.White;
             radiusLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            radiusLabel.Location = new Point(15, 5);
+            radiusLabel.Location = new Point(15, 11);
             radiusLabel.Margin = new Padding(4, 0, 4, 0);
             radiusLabel.Name = "radiusLabel";
             radiusLabel.Size = new Size(420, 40);
@@ -479,11 +481,8 @@
             controlPanel.ResumeLayout(false);
             buttonsPanel.ResumeLayout(false);
             resultPanel.ResumeLayout(false);
-            resultPanel.PerformLayout();
             checkBoxPanel.ResumeLayout(false);
-            checkBoxPanel.PerformLayout();
             circlePositionPanel.ResumeLayout(false);
-            circlePositionPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)yNumericUpDown).EndInit();
             ((System.ComponentModel.ISupportInitialize)xNumericUpDown).EndInit();
             pointCountPanel.ResumeLayout(false);

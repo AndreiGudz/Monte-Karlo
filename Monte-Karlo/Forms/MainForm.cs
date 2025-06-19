@@ -1,6 +1,7 @@
 ﻿using Monte_Karlo.Calculators;
 using Monte_Karlo.DataBase;
 using Monte_Karlo.Models;
+using Monte_Karlo.Utilites;
 using Monte_Karlo.View;
 using System;
 using System.Collections.Generic;
@@ -22,19 +23,24 @@ namespace Monte_Karlo
         private Circle circle = new Circle();
         private int pointsCount = 100_000;
 
-        private GeneratorAsyncAction generateAction = PointsGenerator.GenerateRandomPointsAsync;
-        private GeneratorAsyncAction calculateCuttedAction = PointsGenerator.CalculateCuttedPointsAsync;
+        private MonteCarloView _view;
+        private PointsGenerator _pointsGenerator;
+        private DatabaseHelper _databaseHelper;
 
         public MainForm()
         {
             InitializeComponent();
+            InitializeControlPanel();
 
             DoubleBuffered = true;
             typeof(Panel).InvokeMember("DoubleBuffered",
                 BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
                 null, paintPanel, new object[] { true });
-            InitializeControlPanel();
-            DatabaseHelper.InitializeDatabase();
+
+
+            _databaseHelper = new DatabaseHelper();
+            _view = new MonteCarloView();
+            _pointsGenerator = new PointsGenerator();
         }
 
         private void InitializeControlPanel()
@@ -46,7 +52,7 @@ namespace Monte_Karlo
             radiusLabel.Text = $"Радиус круга: {radiusTrackBar.Value}";
             SetCTrackBarBorders();
 
-            scaleTrackBar.Value = MonteCarloView.GridStep;
+            scaleTrackBar.Value = _view.GridStep;
             scaleLabel.Text = $"Масштаб: {scaleTrackBar.Value}";
 
             cTrackBar.Value = Convert.ToInt32(circle.C * cofficient);
@@ -59,14 +65,15 @@ namespace Monte_Karlo
         {
             try
             {
-                MonteCarloView.RenderToBuffer(paintPanel, e, circle);
+                _view.pointsGenerator = _pointsGenerator;
+                _view.RenderToBuffer(paintPanel, e, circle);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Произошла ошибка из-за частой переотрисовки графика.\n" +
                     "Пожалуйста, дайте вермя на переотрисовку графика", "Ошбика");
                 Thread.Sleep(100);
-                MonteCarloView.RenderToBuffer(paintPanel, e, circle);
+                _view.RenderToBuffer(paintPanel, e, circle);
             }
 
             base.OnPaint(e);
@@ -104,7 +111,7 @@ namespace Monte_Karlo
         private void scaleTrackbar_Scroll(object sender, EventArgs e)
         {
             scaleLabel.Text = $"Масштаб: {scaleTrackBar.Value}";
-            MonteCarloView.GridStep = scaleTrackBar.Value;
+            _view.GridStep = scaleTrackBar.Value;
 
             paintPanel.Invalidate();
         }
@@ -159,16 +166,19 @@ namespace Monte_Karlo
                 paintPanel.Invalidate();
 
                 var realSquare = Calculator.CalculateAnalyticArea(circle);
-                var monteCarloSquare = Calculator.CalculateMonteCarloArea(circle.radius);
+                var monteCarloSquare = Calculator.CalculateMonteCarloArea(
+                    circle.radius,
+                    _pointsGenerator.Points.Count,
+                    _pointsGenerator.CuttedPoints.Count);
 
                 ShowAnswereMessage(realSquare, monteCarloSquare);
 
                 WriteResultOnLabels(realSquare, monteCarloSquare);
-                DatabaseHelper.SaveResults(
+                _databaseHelper.SaveResults(
                     circle,
                     pointsCount,
-                    PointsGenerator.IncludedPoints.Count,
-                    PointsGenerator.CuttedPoints.Count,
+                    _pointsGenerator.IncludedPoints.Count,
+                    _pointsGenerator.CuttedPoints.Count,
                     realSquare,
                     monteCarloSquare);
             }
@@ -198,13 +208,15 @@ namespace Monte_Karlo
             if (!showMessageCheckBox.Checked)
                 return;
 
-            double roundRelativeError = Math.Round(Calculator.CalculateRelativeError(realSquare, monteCarloSquare), 3);
-            double roundAbsoluteError = Math.Round(Calculator.CalculateAbsoluteError(realSquare, monteCarloSquare), 3);
+            double absoluteError = Calculator.CalculateAbsoluteError(realSquare, monteCarloSquare);
+            double relativeError = Calculator.CalculateRelativeError(realSquare, monteCarloSquare);
+            double roundAbsoluteError = Math.Round(absoluteError, 3);
+            double roundRelativeError = Math.Round(relativeError, 3);
             string message = $"""
             Площадь круга: {Calculator.CircleSuare(circle.radius):F4}
-            Всего точек: {PointsGenerator.Points.Count}
-            Количество точек попавших в круг {PointsGenerator.IncludedPoints.Count}
-            Количество точек в большей секции: {PointsGenerator.CuttedPoints.Count}
+            Всего точек: {_pointsGenerator.Points.Count}
+            Количество точек попавших в круг {_pointsGenerator.IncludedPoints.Count}
+            Количество точек в большей секции: {_pointsGenerator.CuttedPoints.Count}
             Площадь секции аналитически: {realSquare:F4}
             Площадь секции методом Монте-Карло: {monteCarloSquare:F4}
             Абсолютаня погрешность вычислений: {roundAbsoluteError}
@@ -233,7 +245,7 @@ namespace Monte_Karlo
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            PointsGenerator.ClearPoints();
+            _pointsGenerator.ClearPoints();
             paintPanel.Invalidate();
             WriteResultOnLabels(0, 0);
         }
@@ -258,7 +270,7 @@ namespace Monte_Karlo
         {
             try
             {
-                var circleParam = DatabaseHelper.GetData(circle, pointsCount);
+                var circleParam = _databaseHelper.GetData(circle, pointsCount);
                 var form = new AnalysisForm(circleParam);
                 form.ShowDialog();
             }

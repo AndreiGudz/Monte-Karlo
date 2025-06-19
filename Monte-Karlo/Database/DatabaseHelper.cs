@@ -8,15 +8,20 @@ using System.Threading.Tasks;
 
 namespace Monte_Karlo.DataBase
 {
-    public static class DatabaseHelper
+    public class DatabaseHelper
     {
-        public static void InitializeDatabase()
+        public DatabaseHelper()
         {
-            using var context = new AppDbContext();
-            context.Database.EnsureCreatedAsync();
+            InitializeDatabase();
         }
 
-        public static void SaveResults(Circle circle, int totalPoints,
+        public void InitializeDatabase()
+        {
+            using var context = new AppDbContext();
+            context.Database.EnsureCreated();
+        }
+
+        public void SaveResults(Circle circle, int totalPoints,
             int pointsInCircle, int pointsInSegment, double analyticalResult, double monteCarloResult)
         {
             using var context = new AppDbContext();
@@ -58,7 +63,7 @@ namespace Monte_Karlo.DataBase
             context.SaveChanges();
         }
 
-        public static CircleParams GetData(Circle circle, int totalPoints)
+        public CircleParams GetData(Circle circle, int totalPoints)
         {
             using var context = new AppDbContext();
 
