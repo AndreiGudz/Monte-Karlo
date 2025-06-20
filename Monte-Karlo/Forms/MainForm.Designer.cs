@@ -63,6 +63,7 @@
             aboutProgramToolStripMenuItem = new ToolStripMenuItem();
             analysisOfResultsToolStripMenuItem = new ToolStripMenuItem();
             closeProgramToolStripMenuItem = new ToolStripMenuItem();
+            управлениеЭксперементамиToolStripMenuItem = new ToolStripMenuItem();
             controlPanel.SuspendLayout();
             buttonsPanel.SuspendLayout();
             resultPanel.SuspendLayout();
@@ -427,7 +428,7 @@
             // menuStrip
             // 
             menuStrip.ImageScalingSize = new Size(28, 28);
-            menuStrip.Items.AddRange(new ToolStripItem[] { programHelpToolStripMenuItem, aboutProgramToolStripMenuItem, analysisOfResultsToolStripMenuItem, closeProgramToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { programHelpToolStripMenuItem, aboutProgramToolStripMenuItem, analysisOfResultsToolStripMenuItem, управлениеЭксперементамиToolStripMenuItem, closeProgramToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(1425, 38);
@@ -461,6 +462,13 @@
             closeProgramToolStripMenuItem.Size = new Size(237, 34);
             closeProgramToolStripMenuItem.Text = "Закрыть приложение";
             closeProgramToolStripMenuItem.Click += closeProgramToolStripMenuItem_Click;
+            // 
+            // управлениеЭксперементамиToolStripMenuItem
+            // 
+            управлениеЭксперементамиToolStripMenuItem.Name = "управлениеЭксперементамиToolStripMenuItem";
+            управлениеЭксперементамиToolStripMenuItem.Size = new Size(313, 34);
+            управлениеЭксперементамиToolStripMenuItem.Text = "Управление эксперементами";
+            управлениеЭксперементамиToolStripMenuItem.Click += управлениеЭксперементамиToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -537,5 +545,6 @@
         private Panel buttonsPanel;
         private Button btnGeneratePoints;
         private Button btnClear;
+        private ToolStripMenuItem управлениеЭксперементамиToolStripMenuItem;
     }
 }

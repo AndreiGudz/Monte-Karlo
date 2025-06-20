@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Monte_Karlo.Calculators
+namespace Monte_Karlo.Utilites.Calculators
 {
     public static class StatisticCalculator
     {

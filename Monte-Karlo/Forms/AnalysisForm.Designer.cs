@@ -146,7 +146,7 @@ namespace Monte_Karlo
             // lblRange
             // 
             lblRange.AutoSize = true;
-            lblRange.Location = new Point(303, 543);
+            lblRange.Location = new Point(301, 540);
             lblRange.Margin = new Padding(5, 0, 5, 0);
             lblRange.Name = "lblRange";
             lblRange.Size = new Size(21, 30);
@@ -156,7 +156,7 @@ namespace Monte_Karlo
             // lblMaximum
             // 
             lblMaximum.AutoSize = true;
-            lblMaximum.Location = new Point(303, 483);
+            lblMaximum.Location = new Point(301, 480);
             lblMaximum.Margin = new Padding(5, 0, 5, 0);
             lblMaximum.Name = "lblMaximum";
             lblMaximum.Size = new Size(21, 30);
@@ -166,7 +166,7 @@ namespace Monte_Karlo
             // lblMinimum
             // 
             lblMinimum.AutoSize = true;
-            lblMinimum.Location = new Point(303, 423);
+            lblMinimum.Location = new Point(301, 420);
             lblMinimum.Margin = new Padding(5, 0, 5, 0);
             lblMinimum.Name = "lblMinimum";
             lblMinimum.Size = new Size(21, 30);
@@ -176,7 +176,7 @@ namespace Monte_Karlo
             // lblStdDev
             // 
             lblStdDev.AutoSize = true;
-            lblStdDev.Location = new Point(303, 363);
+            lblStdDev.Location = new Point(301, 360);
             lblStdDev.Margin = new Padding(5, 0, 5, 0);
             lblStdDev.Name = "lblStdDev";
             lblStdDev.Size = new Size(21, 30);
@@ -186,7 +186,7 @@ namespace Monte_Karlo
             // lblVariance
             // 
             lblVariance.AutoSize = true;
-            lblVariance.Location = new Point(303, 303);
+            lblVariance.Location = new Point(301, 300);
             lblVariance.Margin = new Padding(5, 0, 5, 0);
             lblVariance.Name = "lblVariance";
             lblVariance.Size = new Size(21, 30);
@@ -196,7 +196,7 @@ namespace Monte_Karlo
             // lblMode
             // 
             lblMode.AutoSize = true;
-            lblMode.Location = new Point(303, 243);
+            lblMode.Location = new Point(301, 240);
             lblMode.Margin = new Padding(5, 0, 5, 0);
             lblMode.Name = "lblMode";
             lblMode.Size = new Size(21, 30);
@@ -206,7 +206,7 @@ namespace Monte_Karlo
             // lblMedian
             // 
             lblMedian.AutoSize = true;
-            lblMedian.Location = new Point(303, 183);
+            lblMedian.Location = new Point(301, 180);
             lblMedian.Margin = new Padding(5, 0, 5, 0);
             lblMedian.Name = "lblMedian";
             lblMedian.Size = new Size(21, 30);
@@ -216,7 +216,7 @@ namespace Monte_Karlo
             // lblMean
             // 
             lblMean.AutoSize = true;
-            lblMean.Location = new Point(303, 123);
+            lblMean.Location = new Point(301, 120);
             lblMean.Margin = new Padding(5, 0, 5, 0);
             lblMean.Name = "lblMean";
             lblMean.Size = new Size(21, 30);
@@ -226,7 +226,7 @@ namespace Monte_Karlo
             // lblAnalisicResult
             // 
             lblAnalisicResult.AutoSize = true;
-            lblAnalisicResult.Location = new Point(303, 63);
+            lblAnalisicResult.Location = new Point(301, 60);
             lblAnalisicResult.Margin = new Padding(5, 0, 5, 0);
             lblAnalisicResult.Name = "lblAnalisicResult";
             lblAnalisicResult.Size = new Size(21, 30);
@@ -236,7 +236,7 @@ namespace Monte_Karlo
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(32, 543);
+            label9.Location = new Point(30, 540);
             label9.Margin = new Padding(5, 0, 5, 0);
             label9.Name = "label9";
             label9.Size = new Size(86, 30);
@@ -246,7 +246,7 @@ namespace Monte_Karlo
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(32, 483);
+            label8.Location = new Point(30, 480);
             label8.Margin = new Padding(5, 0, 5, 0);
             label8.Name = "label8";
             label8.Size = new Size(120, 30);
@@ -256,7 +256,7 @@ namespace Monte_Karlo
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(32, 423);
+            label7.Location = new Point(30, 420);
             label7.Margin = new Padding(5, 0, 5, 0);
             label7.Name = "label7";
             label7.Size = new Size(113, 30);
@@ -266,7 +266,7 @@ namespace Monte_Karlo
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(32, 363);
+            label6.Location = new Point(30, 360);
             label6.Margin = new Padding(5, 0, 5, 0);
             label6.Name = "label6";
             label6.Size = new Size(259, 30);
@@ -276,7 +276,7 @@ namespace Monte_Karlo
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(32, 303);
+            label5.Location = new Point(30, 300);
             label5.Margin = new Padding(5, 0, 5, 0);
             label5.Name = "label5";
             label5.Size = new Size(123, 30);
@@ -286,7 +286,7 @@ namespace Monte_Karlo
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(32, 243);
+            label4.Location = new Point(30, 240);
             label4.Margin = new Padding(5, 0, 5, 0);
             label4.Name = "label4";
             label4.Size = new Size(71, 30);
@@ -296,7 +296,7 @@ namespace Monte_Karlo
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(32, 183);
+            label3.Location = new Point(30, 180);
             label3.Margin = new Padding(5, 0, 5, 0);
             label3.Name = "label3";
             label3.Size = new Size(105, 30);
@@ -306,7 +306,7 @@ namespace Monte_Karlo
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(32, 123);
+            label2.Location = new Point(30, 120);
             label2.Margin = new Padding(5, 0, 5, 0);
             label2.Name = "label2";
             label2.Size = new Size(99, 30);
@@ -316,7 +316,7 @@ namespace Monte_Karlo
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(32, 63);
+            label1.Location = new Point(30, 60);
             label1.Margin = new Padding(5, 0, 5, 0);
             label1.Name = "label1";
             label1.Size = new Size(265, 30);
@@ -403,7 +403,7 @@ namespace Monte_Karlo
             paintPanel.Name = "paintPanel";
             paintPanel.Size = new Size(1353, 845);
             paintPanel.TabIndex = 3;
-            paintPanel.Paint += this.paintPanel_Paint;
+            paintPanel.Paint += paintPanel_Paint;
             // 
             // AnalysisForm
             // 

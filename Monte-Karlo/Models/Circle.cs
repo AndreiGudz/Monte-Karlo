@@ -37,5 +37,10 @@ namespace Monte_Karlo.Models
         {
             return HashCode.Combine(circleCenter.X, circleCenter.Y, radius, direction, C);
         }
+
+        public override string ToString()
+        {
+            return $"CircleCenter: {circleCenter}, Radius: {radius}, Direction: {direction}, C: {C}";
+        }
     }
 }

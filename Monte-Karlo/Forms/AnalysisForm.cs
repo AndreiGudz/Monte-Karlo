@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Monte_Karlo.Calculators;
 using Monte_Karlo.DataBase;
 using Monte_Karlo.Models;
-using Monte_Karlo.View;
+using Monte_Karlo.Utilites;
+using Monte_Karlo.Utilites.Calculators;
+using Monte_Karlo.Utilites.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -42,10 +43,7 @@ namespace Monte_Karlo
 
         private void SetupDataGridView()
         {
-            // Очищаем и настраиваем DataGridView
             dataGridViewResults.Columns.Clear();
-
-            // Добавляем колонки с настройками
             AddColumn("Id", "№", "Id", true, "D2", null, DataGridViewAutoSizeColumnMode.DisplayedCells);
             AddColumn("PointsInCircle", "Точек в окружности", "PointsInCircle", true, "N0");
             AddColumn("PointsInSegment", "Точек в сегменте", "PointsInSegment", true, "N0");
@@ -57,7 +55,6 @@ namespace Monte_Karlo
 
             if (_currentParams != null && _currentParams.Results.Any())
             {
-                // Создаем список с дополнительным полем Error
                 int id = 0;
                 var displayResults = _currentParams.Results
                     .OrderByDescending(r => r.Id)
@@ -111,7 +108,7 @@ namespace Monte_Karlo
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     Format = format,
-                    Alignment = DataGridViewContentAlignment.MiddleRight
+                    Alignment = DataGridViewContentAlignment.MiddleCenter,
                 },
                 SortMode = DataGridViewColumnSortMode.Programmatic,
                 AutoSizeMode = AutoSizeMode
@@ -177,13 +174,13 @@ namespace Monte_Karlo
                         break;
                     case "AbsoluteError":
                         bindingSource.DataSource = direction == ListSortDirection.Ascending ?
-                            data.OrderBy(x => x.AbsoluteError).ToList() :
-                            data.OrderByDescending(x => x.AbsoluteError).ToList();
+                            data.OrderBy(x => Convert.ToDouble(x.AbsoluteError)).ToList() :
+                            data.OrderByDescending(x => Convert.ToDouble(x.AbsoluteError)).ToList();
                         break;
                     case "RelativeError":
                         bindingSource.DataSource = direction == ListSortDirection.Ascending ?
-                            data.OrderBy(x => x.RelativeError).ToList() :
-                            data.OrderByDescending(x => x.RelativeError).ToList();
+                            data.OrderBy(x => Convert.ToDouble(x.RelativeError)).ToList() :
+                            data.OrderByDescending(x => Convert.ToDouble(x.RelativeError)).ToList();
                         break;
                     default:
                         bindingSource.DataSource = direction == ListSortDirection.Ascending ?

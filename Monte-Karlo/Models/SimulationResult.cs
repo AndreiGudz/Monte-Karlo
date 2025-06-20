@@ -13,5 +13,14 @@ namespace Monte_Karlo.Models
 
         public int CircleParamsId { get; set; }
         public CircleParams CircleParams { get; set; }
+
+        public override string ToString()
+        {
+            return $"""
+                   Id: {Id}, PointsInCircle: {PointsInCircle}, PointsInSegment: {PointsInSegment},
+                   MonteCarloResult: {MonteCarloResult}, CircleParamsId: {CircleParamsId}
+                   """;
+        }
     }
 }
+

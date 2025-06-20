@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Monte_Karlo.Calculators
+namespace Monte_Karlo.Utilites.Calculators
 {
-    public class Calculator
+    public static class Calculator
     {
         public static double CalculateAnalyticArea(Circle circle)
         {
@@ -66,11 +66,35 @@ namespace Monte_Karlo.Calculators
             return cuttedPoints / (double)allPoints * squareArea;
         }
 
-        public static double CalculateAbsoluteError(double expectedResult, double actualResult) => expectedResult - actualResult;
+        public static double CalculateAbsoluteError(double expectedResult, double actualResult)
+        {
+            var result = expectedResult - actualResult;
+            result = RoundToTwoSignificantDigits(result, 2);
+            return result;
+        }
 
         public static double CalculateRelativeError(double expectedResult, double actualResult)
         {
-            return Math.Abs(CalculateAbsoluteError(expectedResult, actualResult)) / actualResult * 100d;
+            if (expectedResult <= 0)
+                throw new ArgumentException("Ожидаемое значение не может быть <= 0");
+            if (actualResult < 0)
+                throw new ArgumentException("Полученное значение не может быть < 0");
+            var result = Math.Abs(CalculateAbsoluteError(expectedResult, actualResult)) / expectedResult * 100d;
+            result = RoundToTwoSignificantDigits(result, 2);
+            return result;
+        }
+
+        public static double RoundToTwoSignificantDigits(double value, int significantDigits)
+        {
+            if (value == 0.0)
+                return 0.0;
+
+            int log10 = (int)Math.Floor(Math.Log10(Math.Abs(value)));
+            double scale = Math.Pow(10, significantDigits - log10 - 1);
+            double rounded = Math.Round(value * scale) / scale;
+
+            // Убираем возможные артефакты округления (например, 0.30000000000000004)
+            return BitConverter.Int64BitsToDouble(BitConverter.DoubleToInt64Bits(rounded));
         }
     }
 }

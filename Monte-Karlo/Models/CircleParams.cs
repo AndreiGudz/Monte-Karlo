@@ -21,5 +21,14 @@ namespace Monte_Karlo.Models
         public double AnalyticalResult { get; set; }
 
         public List<SimulationResult> Results { get; set; } = new List<SimulationResult>();
+
+        public override string ToString()
+        {
+            return $"""
+                   Id: {Id}, CenterX: {CenterX}, CenterY: {CenterY}, Radius: {Radius}, 
+                   Direction: {Direction}, C: {C}, TotalPoints: {TotalPoints},
+                   AnalyticalResult: {AnalyticalResult}, ResultsCount: {Results.Count}
+                   """;
+        }
     }
 }

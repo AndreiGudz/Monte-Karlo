@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Monte_Karlo.View
+namespace Monte_Karlo.Utilites.View
 {
     public class MonteCarloView
     {
@@ -19,7 +19,6 @@ namespace Monte_Karlo.View
                 _step = _gridStep * 2;
             }
         }
-        public PointsGenerator pointsGenerator;
         private int _gridStep = 40;
         private int _step = 80;
 
@@ -32,7 +31,7 @@ namespace Monte_Karlo.View
         private static readonly Pen _circlePen = new(Color.Red, 2);
         private static readonly Pen _squarePen = new(Color.Red, 2);
 
-        private static readonly Pen _excludedPointsBrush = new(Color.Aqua, 1);
+        private static readonly Pen _excludedPointsBrush = new(Color.Gray, 1);
         private static readonly Pen _includedPointsBrush = new(Color.Yellow, 1);
         private static readonly Pen _cuttedPointsBrush = new(Color.FromArgb(174, 206, 180), 1);
 
@@ -42,13 +41,13 @@ namespace Monte_Karlo.View
 
 
 
-        public void RenderToBuffer(Panel panel, PaintEventArgs e, Circle circle)
+        public void RenderToBuffer(Panel panel, PaintEventArgs e, Circle circle, PointsData pointsData)
         {
             e.Graphics.Clear(_backgroundColor);
-            OnPaint(panel, e, circle.radius, circle.circleCenter, circle.direction, circle.C);
+            OnPaint(panel, e, circle.radius, circle.circleCenter, circle.direction, circle.C, pointsData);
         }
 
-        private void OnPaint(Panel panel, PaintEventArgs e, float radius, Point circleCenter, Direction direction, float C)
+        private void OnPaint(Panel panel, PaintEventArgs e, float radius, Point circleCenter, Direction direction, float C, PointsData pointsData)
         {
             var g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
@@ -63,7 +62,7 @@ namespace Monte_Karlo.View
             float originY = centerY + circleCenter.Y * _step;
             var origin = new PointF(originX, originY);
 
-            DrawPoints(g, centerScreen, _step);
+            DrawPoints(g, centerScreen, _step, pointsData);
             DrawGrid(panel, g, origin);
             DrawAxis(panel, g, origin);
             DrawCoordinateNumbers(panel, g, origin);
@@ -205,17 +204,17 @@ namespace Monte_Karlo.View
                 g.DrawLine(_cutterPen, center.X + _step * C, 0, center.X + _step * C, panel.Height);
         }
 
-        private void DrawPoints(Graphics g, PointF center, float gridStep)
+        private void DrawPoints(Graphics g, PointF center, float gridStep, PointsData pointsData)
         {
-            /*            foreach (var point in PointsGenerator.ExcludedPoints)
-                        {
-                            g.DrawRectangle(_excludedPointsBrush, point.X * gridStep + center.X, center.Y - point.Y * gridStep, 1, 1);
-                        }
-                        foreach (var point in PointsGenerator.IncludedPoints)
-                        {
-                            g.DrawRectangle(_includedPointsBrush, point.X * gridStep + center.X, center.Y - point.Y * gridStep, 1, 1);
-                        }*/
-            foreach (var point in pointsGenerator.CuttedPoints)
+/*            foreach (var point in pointsData.ExcludedPoints)
+            {
+                g.DrawRectangle(_excludedPointsBrush, point.X * gridStep + center.X, center.Y - point.Y * gridStep, 1, 1);
+            }
+            foreach (var point in pointsData.IncludedPoints)
+            {
+                g.DrawRectangle(_includedPointsBrush, point.X * gridStep + center.X, center.Y - point.Y * gridStep, 1, 1);
+            }*/
+            foreach (var point in pointsData.CuttedPoints)
             {
                 float screenX = center.X + point.X * gridStep;
                 float screenY = center.Y - point.Y * gridStep;

@@ -17,6 +17,8 @@ namespace Monte_Karlo.DataBase
         {
             string databasePath = "DataBase.db";
             optionsBuilder.UseSqlite($"Data Source={databasePath}");
+            //optionsBuilder.LogTo(message => System.Diagnostics.Debug.WriteLine(message));
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

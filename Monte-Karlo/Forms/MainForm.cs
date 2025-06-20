@@ -1,8 +1,9 @@
-﻿using Monte_Karlo.Calculators;
-using Monte_Karlo.DataBase;
+﻿using Monte_Karlo.DataBase;
+using Monte_Karlo.Forms;
 using Monte_Karlo.Models;
 using Monte_Karlo.Utilites;
-using Monte_Karlo.View;
+using Monte_Karlo.Utilites.Calculators;
+using Monte_Karlo.Utilites.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +12,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,29 +20,31 @@ namespace Monte_Karlo
 {
     public partial class MainForm : Form
     {
-        private CancellationTokenSource _generationCts;
         private float cofficient = 2, divisionScale = 0.5f;
         private Circle circle = new Circle();
         private int pointsCount = 100_000;
 
-        private MonteCarloView _view;
+        private CancellationTokenSource _generationCts;
         private PointsGenerator _pointsGenerator;
+        private MonteCarloView _view;
         private DatabaseHelper _databaseHelper;
+        private Logger _logger;
 
         public MainForm()
         {
             InitializeComponent();
-            InitializeControlPanel();
+            _pointsGenerator = new PointsGenerator();
+            _databaseHelper = new DatabaseHelper();
+            _view = new MonteCarloView();
+            _logger = new Logger();
 
             DoubleBuffered = true;
             typeof(Panel).InvokeMember("DoubleBuffered",
                 BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
                 null, paintPanel, new object[] { true });
-
-
-            _databaseHelper = new DatabaseHelper();
-            _view = new MonteCarloView();
-            _pointsGenerator = new PointsGenerator();
+            InitializeControlPanel();
+            _databaseHelper.InitializeDatabase();
+            _logger.Log("Приложение запущено");
         }
 
         private void InitializeControlPanel()
@@ -65,15 +69,24 @@ namespace Monte_Karlo
         {
             try
             {
-                _view.pointsGenerator = _pointsGenerator;
-                _view.RenderToBuffer(paintPanel, e, circle);
+                _view.RenderToBuffer(
+                    paintPanel,
+                    e,
+                    circle,
+                    _pointsGenerator.GetCurrentPoints()
+                );
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Произошла ошибка из-за частой переотрисовки графика.\n" +
-                    "Пожалуйста, дайте вермя на переотрисовку графика", "Ошбика");
+                    "Пожалуйста, дайте время на переотрисовку графика", "Ошибка");
                 Thread.Sleep(100);
-                _view.RenderToBuffer(paintPanel, e, circle);
+                _view.RenderToBuffer(
+                    paintPanel,
+                    e,
+                    circle,
+                    _pointsGenerator.GetCurrentPoints()
+                );
             }
 
             base.OnPaint(e);
@@ -85,7 +98,7 @@ namespace Monte_Karlo
             circle.radius = (float)radiusTrackBar.Value;
             SetCTrackBarBorders();
 
-            await MonteCarloCalculate(generateAction);
+            await MonteCarloCalculate(true);
         }
 
         private void SetCTrackBarBorders()
@@ -120,19 +133,19 @@ namespace Monte_Karlo
         {
             pointsCount = (int)pointsCountUpdown.Value;
 
-            await MonteCarloCalculate(generateAction);
+            await MonteCarloCalculate(true);
         }
 
         private async void cTrackbar_ValueChanged(object sender, EventArgs e)
         {
             circle.C = cTrackBar.Value * divisionScale;
             cLabel.Text = $"Значение C: {circle.C}";
-            await MonteCarloCalculate(calculateCuttedAction);
+            await MonteCarloCalculate(false);
         }
 
         private async void btnGeneratePoints_Click(object sender, EventArgs e)
         {
-            await MonteCarloCalculate(generateAction);
+            await MonteCarloCalculate(true);
         }
 
         private async void horizontalCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -143,10 +156,10 @@ namespace Monte_Karlo
                 circle.direction = Direction.horizontal;
 
             SetCTrackBarBorders();
-            await MonteCarloCalculate(calculateCuttedAction);
+            await MonteCarloCalculate(false);
         }
 
-        private async Task MonteCarloCalculate(GeneratorAsyncAction generatorAsyncAction)
+        private async Task MonteCarloCalculate(bool generateNewPoints)
         {
             if (this.Visible != true)
                 return;
@@ -158,27 +171,38 @@ namespace Monte_Karlo
             {
                 var token = _generationCts.Token;
 
-                await generatorAsyncAction(circle, pointsCount, token);
+                if (generateNewPoints)
+                {
+                    await _pointsGenerator.GenerateRandomPointsAsync(circle, pointsCount, token);
+                }
+                else
+                {
+                    await _pointsGenerator.CalculateCuttedPointsAsync(circle, pointsCount, token);
+                }
 
                 if (token.IsCancellationRequested)
                     return;
 
                 paintPanel.Invalidate();
 
-                var realSquare = Calculator.CalculateAnalyticArea(circle);
-                var monteCarloSquare = Calculator.CalculateMonteCarloArea(
+                var currentPoints = _pointsGenerator.GetCurrentPoints();
+                double realSquare = Calculator.CalculateAnalyticArea(circle);
+                var roundedRealSquare = Math.Round(realSquare, 4);
+                double monteCarloSquare = Calculator.CalculateMonteCarloArea(
                     circle.radius,
-                    _pointsGenerator.Points.Count,
-                    _pointsGenerator.CuttedPoints.Count);
+                    currentPoints.Points.Count,
+                    currentPoints.CuttedPoints.Count);
+                var roundedMonteCarloSquare = Math.Round(monteCarloSquare, 4);
 
-                ShowAnswereMessage(realSquare, monteCarloSquare);
+                ShowAnswereMessage(realSquare, monteCarloSquare, currentPoints);
+                _logger.Log($"Сделаны расчёты с параметрами: {circle.ToString()} и количеством точек {pointsCount}");
 
-                WriteResultOnLabels(realSquare, monteCarloSquare);
+                WriteResultOnLabels(roundedRealSquare, roundedMonteCarloSquare);
                 _databaseHelper.SaveResults(
                     circle,
                     pointsCount,
-                    _pointsGenerator.IncludedPoints.Count,
-                    _pointsGenerator.CuttedPoints.Count,
+                    currentPoints.IncludedPoints.Count,
+                    currentPoints.CuttedPoints.Count,
                     realSquare,
                     monteCarloSquare);
             }
@@ -194,7 +218,8 @@ namespace Monte_Karlo
 
         private void ShowException(Exception ex)
         {
-            MessageBox.Show(ex.Message + "\n" + ex.StackTrace, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            _logger.LogException(ex);
         }
 
         private void WriteResultOnLabels(double realSquare, double monteCarloSquare)
@@ -203,24 +228,26 @@ namespace Monte_Karlo
             monteCarloSquareLabel.Text = $"Площадь методом Монте-Карло: {monteCarloSquare:F4}";
         }
 
-        private void ShowAnswereMessage(double realSquare, double monteCarloSquare)
+        private void ShowAnswereMessage(double realSquare, double monteCarloSquare, PointsData currentPoints)
         {
             if (!showMessageCheckBox.Checked)
                 return;
 
             double absoluteError = Calculator.CalculateAbsoluteError(realSquare, monteCarloSquare);
             double relativeError = Calculator.CalculateRelativeError(realSquare, monteCarloSquare);
-            double roundAbsoluteError = Math.Round(absoluteError, 3);
-            double roundRelativeError = Math.Round(relativeError, 3);
+            double roundAbsoluteError = Math.Round(absoluteError, 4);
+            double roundRelativeError = Math.Round(relativeError, 4);
+            double maxAccuracy = 1 / (double)pointsCount;
             string message = $"""
             Площадь круга: {Calculator.CircleSuare(circle.radius):F4}
-            Всего точек: {_pointsGenerator.Points.Count}
-            Количество точек попавших в круг {_pointsGenerator.IncludedPoints.Count}
-            Количество точек в большей секции: {_pointsGenerator.CuttedPoints.Count}
+            Всего точек: {currentPoints.Points.Count}
+            Количество точек попавших в круг {currentPoints.IncludedPoints.Count}
+            Количество точек в большей секции: {currentPoints.CuttedPoints.Count}
             Площадь секции аналитически: {realSquare:F4}
             Площадь секции методом Монте-Карло: {monteCarloSquare:F4}
             Абсолютаня погрешность вычислений: {roundAbsoluteError}
             Относительная погрешность вычислений: {roundRelativeError}%
+            Максимальная точность при заданном количестве точек: {maxAccuracy}
             """;
             MessageBox.Show(message, "Результат вычислений");
         }
@@ -228,26 +255,41 @@ namespace Monte_Karlo
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             _generationCts?.Cancel();
+            _logger.Log("Приложение закрыто");
             Application.Exit();
         }
 
-        // TO DO
         private void programHelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            // Реализация справки
         }
 
         private void aboutProgramToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = new AboutProgramForm();
-            form.ShowDialog();
-        }
+            try
+            {
+                var form = new AboutProgramForm();
+                form.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                ShowException(ex);
+            }
+}
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            _pointsGenerator.ClearPoints();
-            paintPanel.Invalidate();
-            WriteResultOnLabels(0, 0);
+            try
+            {
+                _pointsGenerator.ClearPoints();
+                paintPanel.Invalidate();
+                WriteResultOnLabels(0, 0);
+                _logger.Log("Очищение точек");
+            }
+            catch (Exception ex)
+            { 
+                ShowException(ex);
+            }
         }
 
         private void closeProgramToolStripMenuItem_Click(object sender, EventArgs e) => this.Close();
@@ -256,14 +298,14 @@ namespace Monte_Karlo
         {
             circle.circleCenter.X = (int)Math.Floor(xNumericUpDown.Value);
             SetCTrackBarBorders();
-            await MonteCarloCalculate(calculateCuttedAction);
+            await MonteCarloCalculate(false);
         }
 
         private async void yNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             circle.circleCenter.Y = (int)Math.Floor(yNumericUpDown.Value);
             SetCTrackBarBorders();
-            await MonteCarloCalculate(calculateCuttedAction);
+            await MonteCarloCalculate(false);
         }
 
         private void analysisOfResultsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -283,6 +325,19 @@ namespace Monte_Karlo
         private void paintPanel_Resize(object sender, EventArgs e)
         {
             paintPanel.Invalidate();
+        }
+
+        private void управлениеЭксперементамиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var form = new DataManagementForm();
+                form.ShowDialog();
+            }
+            catch (Exception ex)
+            { 
+                ShowException(ex);
+            }
         }
     }
 }
