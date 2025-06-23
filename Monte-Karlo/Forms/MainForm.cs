@@ -217,7 +217,7 @@ namespace Monte_Karlo
 
         private void ShowException(Exception ex)
         {
-            MessageBox.Show($"{ex.Message}\n{ex.StackTrace}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show($"{ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             _logger.LogException(ex);
         }
 
