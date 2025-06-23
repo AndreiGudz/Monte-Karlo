@@ -10,14 +10,14 @@ namespace Monte_Karlo.Utilites
 {
     public class PointsGenerator
     {
-        private readonly SemaphoreSlim _semaphore = new(1, 1);
+        private readonly Mutex _mutex = new();
         private PointsData _currentPoints = new();
 
         public async Task GenerateRandomPointsAsync(Circle circle, int count, CancellationToken token)
         {
             try
             {
-                await _semaphore.WaitAsync(token);
+                _mutex.WaitOne();
                 token.ThrowIfCancellationRequested();
 
                 var newPoints = new PointsData();
@@ -44,7 +44,7 @@ namespace Monte_Karlo.Utilites
             }
             finally
             {
-                _semaphore.Release();
+                _mutex.ReleaseMutex();
             }
         }
 
@@ -52,7 +52,7 @@ namespace Monte_Karlo.Utilites
         {
             try
             {
-                await _semaphore.WaitAsync(token);
+                _mutex.WaitOne();
                 token.ThrowIfCancellationRequested();
 
                 if (_currentPoints.Points.Count == 0)
@@ -73,7 +73,7 @@ namespace Monte_Karlo.Utilites
             }
             finally
             {
-                _semaphore.Release();
+                _mutex.ReleaseMutex();
             }
         }
 
@@ -106,7 +106,6 @@ namespace Monte_Karlo.Utilites
         {
             float radiusSquared = radius * radius;
             var includedPoints = new ConcurrentBag<PointF>();
-            var excludedPoints = new ConcurrentBag<PointF>();
 
             Parallel.ForEach(pointsData.Points, parallelOptions, point =>
             {
@@ -116,14 +115,9 @@ namespace Monte_Karlo.Utilites
                 {
                     includedPoints.Add(point);
                 }
-                else
-                {
-                    excludedPoints.Add(point);
-                }
             });
 
             pointsData.IncludedPoints = includedPoints.ToList();
-            pointsData.ExcludedPoints = excludedPoints.ToList();
         }
 
         private static void CalculateCuttedPoints(PointsData pointsData, Circle circle, ParallelOptions parallelOptions)
@@ -171,6 +165,7 @@ namespace Monte_Karlo.Utilites
                 });
             }
 
+            pointsData.CuttedPoints.Clear();
             pointsData.CuttedPoints = cuttedPoints.ToList();
         }
     }

@@ -47,5 +47,8 @@ namespace Monte_Karlo.Utilites.Calculators
         }
 
         public static double CalculateRange(List<double> values) => values.Max() - values.Min();
+
+
+
     }
 }

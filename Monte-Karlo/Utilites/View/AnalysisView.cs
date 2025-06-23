@@ -17,7 +17,7 @@ namespace Monte_Karlo.Utilites.View
         private static readonly Color _analyticalColor = Color.Blue;
         private static readonly Color _pointsColor = Color.Green;
         private static readonly Color _meanColor = Color.Red;
-        private static readonly Color _modeColor = Color.Purple;
+        private static readonly Color _medianColor = Color.Purple;
         private static readonly Color _minMaxColor = Color.Orange;
         private static readonly Color _backgroundColor = Color.White;
         private static readonly Color _gridColor = Color.LightGray;
@@ -47,7 +47,7 @@ namespace Monte_Karlo.Utilites.View
             double analyticalValue = circleParams.AnalyticalResult;
 
             double mean = mcResults.Average();
-            double mode = StatisticCalculator.CalculateMode(mcResults);
+            double median = StatisticCalculator.CalculateMedian(mcResults);
             double min = mcResults.Min();
             double max = mcResults.Max();
 
@@ -65,9 +65,9 @@ namespace Monte_Karlo.Utilites.View
             DrawAnalyticalLine(g, plotArea, analyticalValue, yMin, yRange);
             DrawMonteCarloPoints(g, plotArea, mcResults, yMin, yRange);
             DrawMeanLine(g, plotArea, mean, yMin, yRange);
-            DrawModeLine(g, plotArea, mode, yMin, yRange);
+            DrawMedianLine(g, plotArea, median, yMin, yRange);
             DrawMinMaxLines(g, plotArea, min, max, yMin, yRange);
-            DrawLegend(g, plotArea, mode);
+            DrawLegend(g, plotArea, median);
         }
 
         private void DrawGrid(Graphics g, Rectangle plotArea, int pointsCount, double yMin, double yMax)
@@ -166,10 +166,10 @@ namespace Monte_Karlo.Utilites.View
                       area.Left, y, area.Right, y);
         }
 
-        private void DrawModeLine(Graphics g, Rectangle area, double value, double yMin, double yRange)
+        private void DrawMedianLine(Graphics g, Rectangle area, double value, double yMin, double yRange)
         {
             float y = area.Bottom - (float)((value - yMin) / yRange * area.Height);
-            g.DrawLine(new Pen(_modeColor, 3) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dot },
+            g.DrawLine(new Pen(_medianColor, 3) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dot },
                       area.Left, y, area.Right, y);
         }
 
@@ -193,7 +193,7 @@ namespace Monte_Karlo.Utilites.View
             DrawLegendItem(g, "Аналитическое решение", _analyticalColor, startX, startY, boxWidth, itemHeight);
             DrawLegendItem(g, "Точки Монте-Карло", _pointsColor, startX, startY + itemHeight, boxWidth, itemHeight);
             DrawLegendItem(g, "Среднее значение", _meanColor, startX, startY + itemHeight * 2, boxWidth, itemHeight);
-            DrawLegendItem(g, "Мода", _modeColor, startX, startY + itemHeight * 3, boxWidth, itemHeight);
+            DrawLegendItem(g, "Медиана", _medianColor, startX, startY + itemHeight * 3, boxWidth, itemHeight);
             DrawLegendItem(g, "Минимум/Максимум", _minMaxColor, startX, startY + itemHeight * 4, boxWidth, itemHeight);
         }
 

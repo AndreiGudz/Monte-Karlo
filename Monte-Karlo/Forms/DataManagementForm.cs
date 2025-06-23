@@ -306,9 +306,7 @@ namespace Monte_Karlo.Forms
                     await Task.Run(() => 
                     databaseHelper.SaveResults(
                         circle,
-                        pointsCount,
-                        currentPoints.IncludedPoints.Count,
-                        currentPoints.CuttedPoints.Count,
+                        currentPoints,
                         realSquare,
                         monteCarloSquare));
                 }

@@ -62,8 +62,8 @@
             programHelpToolStripMenuItem = new ToolStripMenuItem();
             aboutProgramToolStripMenuItem = new ToolStripMenuItem();
             analysisOfResultsToolStripMenuItem = new ToolStripMenuItem();
-            closeProgramToolStripMenuItem = new ToolStripMenuItem();
             управлениеЭксперементамиToolStripMenuItem = new ToolStripMenuItem();
+            closeProgramToolStripMenuItem = new ToolStripMenuItem();
             controlPanel.SuspendLayout();
             buttonsPanel.SuspendLayout();
             resultPanel.SuspendLayout();
@@ -86,10 +86,10 @@
             // 
             paintPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             paintPanel.BorderStyle = BorderStyle.FixedSingle;
-            paintPanel.Location = new Point(513, 55);
+            paintPanel.Location = new Point(519, 55);
             paintPanel.Margin = new Padding(4);
             paintPanel.Name = "paintPanel";
-            paintPanel.Size = new Size(899, 1024);
+            paintPanel.Size = new Size(893, 1024);
             paintPanel.TabIndex = 0;
             paintPanel.Paint += paintPanel_Paint;
             paintPanel.Resize += paintPanel_Resize;
@@ -112,7 +112,7 @@
             controlPanel.Location = new Point(15, 55);
             controlPanel.Margin = new Padding(4);
             controlPanel.Name = "controlPanel";
-            controlPanel.Size = new Size(490, 1024);
+            controlPanel.Size = new Size(496, 1024);
             controlPanel.TabIndex = 1;
             // 
             // buttonsPanel
@@ -277,7 +277,7 @@
             // 
             pointsCountUpdown.Location = new Point(250, 13);
             pointsCountUpdown.Margin = new Padding(4);
-            pointsCountUpdown.Maximum = new decimal(new int[] { 2000000, 0, 0, 0 });
+            pointsCountUpdown.Maximum = new decimal(new int[] { 1000000, 0, 0, 0 });
             pointsCountUpdown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             pointsCountUpdown.Name = "pointsCountUpdown";
             pointsCountUpdown.Size = new Size(185, 35);
@@ -456,19 +456,19 @@
             analysisOfResultsToolStripMenuItem.Text = "Анализ результатов";
             analysisOfResultsToolStripMenuItem.Click += analysisOfResultsToolStripMenuItem_Click;
             // 
-            // closeProgramToolStripMenuItem
-            // 
-            closeProgramToolStripMenuItem.Name = "closeProgramToolStripMenuItem";
-            closeProgramToolStripMenuItem.Size = new Size(237, 34);
-            closeProgramToolStripMenuItem.Text = "Закрыть приложение";
-            closeProgramToolStripMenuItem.Click += closeProgramToolStripMenuItem_Click;
-            // 
             // управлениеЭксперементамиToolStripMenuItem
             // 
             управлениеЭксперементамиToolStripMenuItem.Name = "управлениеЭксперементамиToolStripMenuItem";
             управлениеЭксперементамиToolStripMenuItem.Size = new Size(313, 34);
             управлениеЭксперементамиToolStripMenuItem.Text = "Управление эксперементами";
             управлениеЭксперементамиToolStripMenuItem.Click += управлениеЭксперементамиToolStripMenuItem_Click;
+            // 
+            // closeProgramToolStripMenuItem
+            // 
+            closeProgramToolStripMenuItem.Name = "closeProgramToolStripMenuItem";
+            closeProgramToolStripMenuItem.Size = new Size(237, 34);
+            closeProgramToolStripMenuItem.Text = "Закрыть приложение";
+            closeProgramToolStripMenuItem.Click += closeProgramToolStripMenuItem_Click;
             // 
             // MainForm
             // 

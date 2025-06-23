@@ -37,10 +37,12 @@ namespace Monte_Karlo.DataBase
             logger.Log("Очистка базы данных");
         }
 
-        public void SaveResults(Circle circle, int totalPoints,
-            int pointsInCircle, int pointsInSegment, double analyticalResult, double monteCarloResult)
+        public void SaveResults(Circle circle, PointsData pointsData, double analyticalResult, double monteCarloResult)
         {
             using var context = new AppDbContext();
+            int totalPoints = pointsData.Points.Count;
+            int pointsInCircle = pointsData.IncludedPoints.Count;
+            int pointsInSegment = pointsData.CuttedPoints.Count;
 
             var circleParams = context.CircleParams
                 .Include(cp => cp.Results)

@@ -198,13 +198,16 @@ namespace Monte_Karlo
 
             var mcResults = _results.Select(r => r.MonteCarloResult).ToList();
             double variance = StatisticCalculator.CalculateVariance(mcResults);
+            variance = Calculator.RoundToTwoSignificantDigits(variance, 2);
+            double stdDev = StatisticCalculator.CalculateStandardDeviation(variance);
+            stdDev = Calculator.RoundToTwoSignificantDigits(stdDev, 2);
 
             lblAnalisicResult.Text = _currentParams.AnalyticalResult.ToString("F4");
             lblMean.Text = mcResults.Average().ToString("F4");
             lblMedian.Text = StatisticCalculator.CalculateMedian(mcResults).ToString("F4");
             lblMode.Text = StatisticCalculator.CalculateMode(mcResults).ToString("F4");
-            lblVariance.Text = variance.ToString("F4");
-            lblStdDev.Text = StatisticCalculator.CalculateStandardDeviation(variance).ToString("F4");
+            lblVariance.Text = variance.ToString();
+            lblStdDev.Text = stdDev.ToString();
             lblMinimum.Text = mcResults.Min().ToString("F4");
             lblMaximum.Text = mcResults.Max().ToString("F4");
             lblRange.Text = StatisticCalculator.CalculateRange(mcResults).ToString("F4");

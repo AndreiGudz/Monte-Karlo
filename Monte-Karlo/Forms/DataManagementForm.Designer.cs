@@ -54,6 +54,7 @@ namespace Monte_Karlo.Forms
             // 
             dgvExperiments.AllowUserToAddRows = false;
             dgvExperiments.AllowUserToDeleteRows = false;
+            dgvExperiments.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvExperiments.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = Color.LightSteelBlue;
@@ -82,7 +83,7 @@ namespace Monte_Karlo.Forms
             dgvExperiments.RowHeadersWidth = 72;
             dgvExperiments.RowTemplate.Height = 25;
             dgvExperiments.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvExperiments.Size = new Size(1392, 649);
+            dgvExperiments.Size = new Size(1406, 706);
             dgvExperiments.TabIndex = 0;
             dgvExperiments.ColumnHeaderMouseClick += dgvExperiments_ColumnHeaderMouseClick;
             // 
@@ -113,7 +114,7 @@ namespace Monte_Karlo.Forms
             btnBackup.Location = new Point(30, 10);
             btnBackup.Margin = new Padding(30, 10, 30, 10);
             btnBackup.Name = "btnBackup";
-            btnBackup.Size = new Size(218, 80);
+            btnBackup.Size = new Size(221, 80);
             btnBackup.TabIndex = 1;
             btnBackup.Text = "Создать резервную копию";
             btnBackup.Click += btnBackup_Click;
@@ -121,10 +122,10 @@ namespace Monte_Karlo.Forms
             // btnClearAll
             // 
             btnClearAll.Dock = DockStyle.Fill;
-            btnClearAll.Location = new Point(308, 10);
+            btnClearAll.Location = new Point(311, 10);
             btnClearAll.Margin = new Padding(30, 10, 30, 10);
             btnClearAll.Name = "btnClearAll";
-            btnClearAll.Size = new Size(218, 80);
+            btnClearAll.Size = new Size(221, 80);
             btnClearAll.TabIndex = 2;
             btnClearAll.Text = "Очистить все данные";
             btnClearAll.Click += btnClearAll_Click;
@@ -132,21 +133,21 @@ namespace Monte_Karlo.Forms
             // btnClearSelected
             // 
             btnClearSelected.Dock = DockStyle.Fill;
-            btnClearSelected.Location = new Point(586, 10);
+            btnClearSelected.Location = new Point(592, 10);
             btnClearSelected.Margin = new Padding(30, 10, 30, 10);
             btnClearSelected.Name = "btnClearSelected";
-            btnClearSelected.Size = new Size(218, 80);
+            btnClearSelected.Size = new Size(221, 80);
             btnClearSelected.TabIndex = 3;
-            btnClearSelected.Text = "Очистить выбранный";
+            btnClearSelected.Text = "Удалить эксперимент";
             btnClearSelected.Click += btnClearSelected_Click;
             // 
             // btnanalysisOfResults
             // 
             btnanalysisOfResults.Dock = DockStyle.Fill;
-            btnanalysisOfResults.Location = new Point(864, 10);
+            btnanalysisOfResults.Location = new Point(873, 10);
             btnanalysisOfResults.Margin = new Padding(30, 10, 30, 10);
             btnanalysisOfResults.Name = "btnanalysisOfResults";
-            btnanalysisOfResults.Size = new Size(218, 80);
+            btnanalysisOfResults.Size = new Size(221, 80);
             btnanalysisOfResults.TabIndex = 4;
             btnanalysisOfResults.Text = "Анализ результата";
             btnanalysisOfResults.Click += btnanalysisOfResults_Click;
@@ -155,9 +156,9 @@ namespace Monte_Karlo.Forms
             // 
             statusStrip.ImageScalingSize = new Size(28, 28);
             statusStrip.Items.AddRange(new ToolStripItem[] { lblStatus });
-            statusStrip.Location = new Point(0, 755);
+            statusStrip.Location = new Point(0, 809);
             statusStrip.Name = "statusStrip";
-            statusStrip.Size = new Size(1392, 39);
+            statusStrip.Size = new Size(1406, 39);
             statusStrip.TabIndex = 5;
             // 
             // lblStatus
@@ -180,33 +181,33 @@ namespace Monte_Karlo.Forms
             tableLayoutPanel1.Controls.Add(btnanalysisOfResults, 3, 0);
             tableLayoutPanel1.Controls.Add(btnClearSelected, 2, 0);
             tableLayoutPanel1.Dock = DockStyle.Bottom;
-            tableLayoutPanel1.Location = new Point(0, 655);
+            tableLayoutPanel1.Location = new Point(0, 709);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(1392, 100);
+            tableLayoutPanel1.Size = new Size(1406, 100);
             tableLayoutPanel1.TabIndex = 6;
             // 
             // btn1000Experiments
             // 
             btn1000Experiments.Dock = DockStyle.Fill;
-            btn1000Experiments.Location = new Point(1142, 10);
+            btn1000Experiments.Location = new Point(1154, 10);
             btn1000Experiments.Margin = new Padding(30, 10, 30, 10);
             btn1000Experiments.Name = "btn1000Experiments";
-            btn1000Experiments.Size = new Size(220, 80);
+            btn1000Experiments.Size = new Size(222, 80);
             btn1000Experiments.TabIndex = 5;
             btn1000Experiments.Text = "Провести 1000 эксперементов";
             btn1000Experiments.Click += btn1000Experiments_Click;
             // 
             // DataManagementForm
             // 
-            ClientSize = new Size(1392, 794);
+            ClientSize = new Size(1406, 848);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(dgvExperiments);
             Controls.Add(statusStrip);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DataManagementForm";
-            Text = "Управление данными экспериментов";
+            Text = "Управление экспериментами";
             FormClosed += DataManagementForm_FormClosed;
             Load += DataManagementForm_Load;
             ((System.ComponentModel.ISupportInitialize)dgvExperiments).EndInit();

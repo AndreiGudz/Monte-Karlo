@@ -2,6 +2,7 @@
 using Monte_Karlo.Utilites;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,8 +32,6 @@ namespace Monte_Karlo.Utilites.View
         private static readonly Pen _circlePen = new(Color.Red, 2);
         private static readonly Pen _squarePen = new(Color.Red, 2);
 
-        private static readonly Pen _excludedPointsBrush = new(Color.Gray, 1);
-        private static readonly Pen _includedPointsBrush = new(Color.Yellow, 1);
         private static readonly Pen _cuttedPointsBrush = new(Color.FromArgb(174, 206, 180), 1);
 
         private static readonly Color _textColor = Color.Black;
@@ -206,20 +205,22 @@ namespace Monte_Karlo.Utilites.View
 
         private void DrawPoints(Graphics g, PointF center, float gridStep, PointsData pointsData)
         {
-/*            foreach (var point in pointsData.ExcludedPoints)
+            if (pointsData.CuttedPoints.Count == 0)
+                return;
+
+            const int ViewPointsLimit = 100_000;
+            int pointsToDraw = Math.Min(pointsData.CuttedPoints.Count, ViewPointsLimit);
+            var rectangles = new RectangleF[pointsToDraw];
+
+            for (int i = 0; i < pointsToDraw; i++)
             {
-                g.DrawRectangle(_excludedPointsBrush, point.X * gridStep + center.X, center.Y - point.Y * gridStep, 1, 1);
-            }
-            foreach (var point in pointsData.IncludedPoints)
-            {
-                g.DrawRectangle(_includedPointsBrush, point.X * gridStep + center.X, center.Y - point.Y * gridStep, 1, 1);
-            }*/
-            foreach (var point in pointsData.CuttedPoints)
-            {
+                var point = pointsData.CuttedPoints[i];
                 float screenX = center.X + point.X * gridStep;
                 float screenY = center.Y - point.Y * gridStep;
-                g.DrawRectangle(_cuttedPointsBrush, screenX, screenY, 1, 1);
+                rectangles[i] = new RectangleF(screenX, screenY, 1, 1);
             }
+
+            g.DrawRectangles(_cuttedPointsBrush, rectangles);
         }
     }
 }

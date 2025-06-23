@@ -143,11 +143,6 @@ namespace Monte_Karlo
             await MonteCarloCalculate(false);
         }
 
-        private async void btnGeneratePoints_Click(object sender, EventArgs e)
-        {
-            await MonteCarloCalculate(true);
-        }
-
         private async void horizontalCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (circle.direction == Direction.horizontal)
@@ -157,6 +152,11 @@ namespace Monte_Karlo
 
             SetCTrackBarBorders();
             await MonteCarloCalculate(false);
+        }
+
+        private async void btnGeneratePoints_Click(object sender, EventArgs e)
+        {
+            await MonteCarloCalculate(true);
         }
 
         private async Task MonteCarloCalculate(bool generateNewPoints)
@@ -185,9 +185,10 @@ namespace Monte_Karlo
 
                 paintPanel.Invalidate();
 
-                var currentPoints = _pointsGenerator.GetCurrentPoints();
                 double realSquare = Calculator.CalculateAnalyticArea(circle);
                 var roundedRealSquare = Math.Round(realSquare, 4);
+
+                var currentPoints = _pointsGenerator.GetCurrentPoints();
                 double monteCarloSquare = Calculator.CalculateMonteCarloArea(
                     circle.radius,
                     currentPoints.Points.Count,
@@ -200,9 +201,7 @@ namespace Monte_Karlo
                 WriteResultOnLabels(roundedRealSquare, roundedMonteCarloSquare);
                 _databaseHelper.SaveResults(
                     circle,
-                    pointsCount,
-                    currentPoints.IncludedPoints.Count,
-                    currentPoints.CuttedPoints.Count,
+                    currentPoints,
                     realSquare,
                     monteCarloSquare);
             }
@@ -218,7 +217,7 @@ namespace Monte_Karlo
 
         private void ShowException(Exception ex)
         {
-            MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show($"{ex.Message}\n{ex.StackTrace}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             _logger.LogException(ex);
         }
 
