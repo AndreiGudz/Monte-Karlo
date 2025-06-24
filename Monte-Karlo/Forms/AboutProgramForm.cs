@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -30,7 +31,11 @@ namespace Monte_Karlo
             try
             {
                 // Открываем ссылку в браузере по умолчанию
-                System.Diagnostics.Process.Start("https://github.com/AndreiGudz");
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "https://github.com/AndreiGudz",
+                    UseShellExecute = true
+                });
             }
             catch (Exception ex)
             {

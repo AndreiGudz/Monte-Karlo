@@ -86,17 +86,16 @@
             // 
             paintPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             paintPanel.BorderStyle = BorderStyle.FixedSingle;
-            paintPanel.Location = new Point(519, 55);
+            paintPanel.Location = new Point(541, 55);
             paintPanel.Margin = new Padding(4);
             paintPanel.Name = "paintPanel";
-            paintPanel.Size = new Size(893, 1024);
+            paintPanel.Size = new Size(865, 999);
             paintPanel.TabIndex = 0;
             paintPanel.Paint += paintPanel_Paint;
             paintPanel.Resize += paintPanel_Resize;
             // 
             // controlPanel
             // 
-            controlPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             controlPanel.AutoScroll = true;
             controlPanel.BackColor = SystemColors.ActiveCaption;
             controlPanel.BorderStyle = BorderStyle.Fixed3D;
@@ -109,10 +108,11 @@
             controlPanel.Controls.Add(scalePpanel);
             controlPanel.Controls.Add(radiusPanel);
             controlPanel.Controls.Add(controlPanelLabel);
-            controlPanel.Location = new Point(15, 55);
+            controlPanel.Dock = DockStyle.Left;
+            controlPanel.Location = new Point(0, 38);
             controlPanel.Margin = new Padding(4);
             controlPanel.Name = "controlPanel";
-            controlPanel.Size = new Size(496, 1024);
+            controlPanel.Size = new Size(533, 1029);
             controlPanel.TabIndex = 1;
             // 
             // buttonsPanel
@@ -122,12 +122,12 @@
             buttonsPanel.Controls.Add(btnGeneratePoints);
             buttonsPanel.Location = new Point(15, 781);
             buttonsPanel.Name = "buttonsPanel";
-            buttonsPanel.Size = new Size(450, 108);
+            buttonsPanel.Size = new Size(474, 108);
             buttonsPanel.TabIndex = 4;
             // 
             // btnClear
             // 
-            btnClear.Location = new Point(239, 13);
+            btnClear.Location = new Point(260, 13);
             btnClear.Name = "btnClear";
             btnClear.Size = new Size(196, 82);
             btnClear.TabIndex = 1;
@@ -152,7 +152,7 @@
             resultPanel.Controls.Add(realSquareLabel);
             resultPanel.Location = new Point(15, 895);
             resultPanel.Name = "resultPanel";
-            resultPanel.Size = new Size(450, 122);
+            resultPanel.Size = new Size(474, 122);
             resultPanel.TabIndex = 9;
             // 
             // monteCarloSquareLabel
@@ -161,7 +161,7 @@
             monteCarloSquareLabel.Location = new Point(15, 58);
             monteCarloSquareLabel.Margin = new Padding(4, 0, 4, 0);
             monteCarloSquareLabel.Name = "monteCarloSquareLabel";
-            monteCarloSquareLabel.Size = new Size(420, 40);
+            monteCarloSquareLabel.Size = new Size(441, 40);
             monteCarloSquareLabel.TabIndex = 3;
             monteCarloSquareLabel.Text = "Площадь методом Монте-Карло:";
             // 
@@ -171,7 +171,7 @@
             realSquareLabel.Location = new Point(15, 17);
             realSquareLabel.Margin = new Padding(4, 0, 4, 0);
             realSquareLabel.Name = "realSquareLabel";
-            realSquareLabel.Size = new Size(420, 40);
+            realSquareLabel.Size = new Size(441, 40);
             realSquareLabel.TabIndex = 2;
             realSquareLabel.Text = "Площадь секции аналитически:";
             // 
@@ -182,7 +182,7 @@
             checkBoxPanel.Controls.Add(horizontalCheckBox);
             checkBoxPanel.Location = new Point(15, 672);
             checkBoxPanel.Name = "checkBoxPanel";
-            checkBoxPanel.Size = new Size(450, 100);
+            checkBoxPanel.Size = new Size(474, 100);
             checkBoxPanel.TabIndex = 8;
             // 
             // showMessageCheckBox
@@ -191,7 +191,7 @@
             showMessageCheckBox.CheckAlign = ContentAlignment.MiddleRight;
             showMessageCheckBox.Location = new Point(15, 52);
             showMessageCheckBox.Name = "showMessageCheckBox";
-            showMessageCheckBox.Size = new Size(420, 40);
+            showMessageCheckBox.Size = new Size(441, 40);
             showMessageCheckBox.TabIndex = 6;
             showMessageCheckBox.Text = "Показывать результат вычислений";
             showMessageCheckBox.UseVisualStyleBackColor = false;
@@ -204,7 +204,7 @@
             horizontalCheckBox.CheckState = CheckState.Checked;
             horizontalCheckBox.Location = new Point(15, 11);
             horizontalCheckBox.Name = "horizontalCheckBox";
-            horizontalCheckBox.Size = new Size(420, 40);
+            horizontalCheckBox.Size = new Size(441, 40);
             horizontalCheckBox.TabIndex = 5;
             horizontalCheckBox.Text = "Направление горизонтальное: ";
             horizontalCheckBox.UseVisualStyleBackColor = false;
@@ -219,14 +219,14 @@
             circlePositionPanel.Controls.Add(xNumericUpDown);
             circlePositionPanel.Location = new Point(15, 71);
             circlePositionPanel.Name = "circlePositionPanel";
-            circlePositionPanel.Size = new Size(450, 70);
+            circlePositionPanel.Size = new Size(474, 70);
             circlePositionPanel.TabIndex = 7;
             // 
             // yLabel
             // 
             yLabel.BackColor = Color.White;
             yLabel.Font = new Font("Segoe UI", 12F);
-            yLabel.Location = new Point(249, 15);
+            yLabel.Location = new Point(270, 15);
             yLabel.Name = "yLabel";
             yLabel.Size = new Size(41, 39);
             yLabel.TabIndex = 3;
@@ -235,7 +235,7 @@
             // yNumericUpDown
             // 
             yNumericUpDown.Font = new Font("Segoe UI", 10F);
-            yNumericUpDown.Location = new Point(295, 15);
+            yNumericUpDown.Location = new Point(316, 15);
             yNumericUpDown.Minimum = new decimal(new int[] { 100, 0, 0, int.MinValue });
             yNumericUpDown.Name = "yNumericUpDown";
             yNumericUpDown.Size = new Size(140, 39);
@@ -270,12 +270,12 @@
             pointCountPanel.Location = new Point(15, 301);
             pointCountPanel.Margin = new Padding(4);
             pointCountPanel.Name = "pointCountPanel";
-            pointCountPanel.Size = new Size(450, 58);
+            pointCountPanel.Size = new Size(474, 58);
             pointCountPanel.TabIndex = 3;
             // 
             // pointsCountUpdown
             // 
-            pointsCountUpdown.Location = new Point(250, 13);
+            pointsCountUpdown.Location = new Point(271, 13);
             pointsCountUpdown.Margin = new Padding(4);
             pointsCountUpdown.Maximum = new decimal(new int[] { 1000000, 0, 0, 0 });
             pointsCountUpdown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -307,7 +307,7 @@
             constantLinePanel.Location = new Point(15, 369);
             constantLinePanel.Margin = new Padding(4);
             constantLinePanel.Name = "constantLinePanel";
-            constantLinePanel.Size = new Size(450, 145);
+            constantLinePanel.Size = new Size(474, 145);
             constantLinePanel.TabIndex = 3;
             // 
             // cTrackBar
@@ -319,7 +319,7 @@
             cTrackBar.Maximum = 42;
             cTrackBar.Minimum = -42;
             cTrackBar.Name = "cTrackBar";
-            cTrackBar.Size = new Size(420, 80);
+            cTrackBar.Size = new Size(441, 80);
             cTrackBar.TabIndex = 0;
             cTrackBar.Value = 1;
             cTrackBar.ValueChanged += cTrackbar_ValueChanged;
@@ -331,7 +331,7 @@
             cLabel.Location = new Point(15, 14);
             cLabel.Margin = new Padding(4, 0, 4, 0);
             cLabel.Name = "cLabel";
-            cLabel.Size = new Size(420, 40);
+            cLabel.Size = new Size(441, 40);
             cLabel.TabIndex = 2;
             cLabel.Text = "Значение C: ";
             cLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -344,7 +344,7 @@
             scalePpanel.Location = new Point(15, 523);
             scalePpanel.Margin = new Padding(4);
             scalePpanel.Name = "scalePpanel";
-            scalePpanel.Size = new Size(450, 140);
+            scalePpanel.Size = new Size(474, 140);
             scalePpanel.TabIndex = 3;
             // 
             // scaleTrackBar
@@ -356,7 +356,7 @@
             scaleTrackBar.Maximum = 150;
             scaleTrackBar.Minimum = 10;
             scaleTrackBar.Name = "scaleTrackBar";
-            scaleTrackBar.Size = new Size(420, 70);
+            scaleTrackBar.Size = new Size(441, 70);
             scaleTrackBar.SmallChange = 5;
             scaleTrackBar.TabIndex = 0;
             scaleTrackBar.TickFrequency = 5;
@@ -371,7 +371,7 @@
             scaleLabel.Location = new Point(15, 10);
             scaleLabel.Margin = new Padding(4, 0, 4, 0);
             scaleLabel.Name = "scaleLabel";
-            scaleLabel.Size = new Size(420, 40);
+            scaleLabel.Size = new Size(441, 40);
             scaleLabel.TabIndex = 2;
             scaleLabel.Text = "Масштаб: ";
             scaleLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -384,7 +384,7 @@
             radiusPanel.Location = new Point(15, 150);
             radiusPanel.Margin = new Padding(4);
             radiusPanel.Name = "radiusPanel";
-            radiusPanel.Size = new Size(450, 140);
+            radiusPanel.Size = new Size(474, 140);
             radiusPanel.TabIndex = 1;
             // 
             // radiusTrackBar
@@ -396,7 +396,7 @@
             radiusTrackBar.Maximum = 20;
             radiusTrackBar.Minimum = 1;
             radiusTrackBar.Name = "radiusTrackBar";
-            radiusTrackBar.Size = new Size(420, 80);
+            radiusTrackBar.Size = new Size(441, 80);
             radiusTrackBar.TabIndex = 0;
             radiusTrackBar.Value = 1;
             radiusTrackBar.Scroll += radiusSlider_Scroll;
@@ -408,7 +408,7 @@
             radiusLabel.Location = new Point(15, 11);
             radiusLabel.Margin = new Padding(4, 0, 4, 0);
             radiusLabel.Name = "radiusLabel";
-            radiusLabel.Size = new Size(420, 40);
+            radiusLabel.Size = new Size(441, 40);
             radiusLabel.TabIndex = 2;
             radiusLabel.Text = "Радиус круга: ";
             radiusLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -431,7 +431,7 @@
             menuStrip.Items.AddRange(new ToolStripItem[] { programHelpToolStripMenuItem, aboutProgramToolStripMenuItem, analysisOfResultsToolStripMenuItem, управлениеЭксперементамиToolStripMenuItem, closeProgramToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(1425, 38);
+            menuStrip.Size = new Size(1419, 38);
             menuStrip.TabIndex = 4;
             menuStrip.Text = "menuStrip1";
             // 
@@ -474,7 +474,7 @@
             // 
             AutoScaleDimensions = new SizeF(12F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1425, 1092);
+            ClientSize = new Size(1419, 1067);
             Controls.Add(controlPanel);
             Controls.Add(paintPanel);
             Controls.Add(menuStrip);
