@@ -18,6 +18,8 @@ namespace Monte_Karlo.Models
         public Circle(Point circleCenter, float radius, Direction direction, float c)
         {
             this.circleCenter = circleCenter;
+            if (radius <= 0)
+                throw new ArgumentException($"R <= 0: R = {radius}");
             this.radius = radius;
             this.direction = direction;
             this.C = c;

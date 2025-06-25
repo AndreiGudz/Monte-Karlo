@@ -50,16 +50,17 @@ namespace Monte_Karlo.Utilites
 
         public async Task CalculateCuttedPointsAsync(Circle circle, int count, CancellationToken token)
         {
+            if (_currentPoints.Points.Count == 0)
+            {
+                await GenerateRandomPointsAsync(circle, count, token);
+                return;
+            }
+
             try
             {
                 _mutex.WaitOne();
                 token.ThrowIfCancellationRequested();
 
-                if (_currentPoints.Points.Count == 0)
-                {
-                    await GenerateRandomPointsAsync(circle, count, token);
-                    return;
-                }
 
                 await Task.Run(() =>
                 {

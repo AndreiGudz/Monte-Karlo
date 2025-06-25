@@ -62,7 +62,7 @@
             programHelpToolStripMenuItem = new ToolStripMenuItem();
             aboutProgramToolStripMenuItem = new ToolStripMenuItem();
             analysisOfResultsToolStripMenuItem = new ToolStripMenuItem();
-            управлениеЭксперементамиToolStripMenuItem = new ToolStripMenuItem();
+            dataManagementToolStripMenuItem = new ToolStripMenuItem();
             closeProgramToolStripMenuItem = new ToolStripMenuItem();
             controlPanel.SuspendLayout();
             buttonsPanel.SuspendLayout();
@@ -428,7 +428,7 @@
             // menuStrip
             // 
             menuStrip.ImageScalingSize = new Size(28, 28);
-            menuStrip.Items.AddRange(new ToolStripItem[] { programHelpToolStripMenuItem, aboutProgramToolStripMenuItem, analysisOfResultsToolStripMenuItem, управлениеЭксперементамиToolStripMenuItem, closeProgramToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { programHelpToolStripMenuItem, aboutProgramToolStripMenuItem, analysisOfResultsToolStripMenuItem, dataManagementToolStripMenuItem, closeProgramToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(1419, 38);
@@ -456,12 +456,12 @@
             analysisOfResultsToolStripMenuItem.Text = "Анализ результатов";
             analysisOfResultsToolStripMenuItem.Click += analysisOfResultsToolStripMenuItem_Click;
             // 
-            // управлениеЭксперементамиToolStripMenuItem
+            // dataManagementToolStripMenuItem
             // 
-            управлениеЭксперементамиToolStripMenuItem.Name = "управлениеЭксперементамиToolStripMenuItem";
-            управлениеЭксперементамиToolStripMenuItem.Size = new Size(313, 34);
-            управлениеЭксперементамиToolStripMenuItem.Text = "Управление эксперементами";
-            управлениеЭксперементамиToolStripMenuItem.Click += управлениеЭксперементамиToolStripMenuItem_Click;
+            dataManagementToolStripMenuItem.Name = "dataManagementToolStripMenuItem";
+            dataManagementToolStripMenuItem.Size = new Size(313, 34);
+            dataManagementToolStripMenuItem.Text = "Управление эксперементами";
+            dataManagementToolStripMenuItem.Click += dataManagementToolStripMenuItem_Click;
             // 
             // closeProgramToolStripMenuItem
             // 
@@ -545,6 +545,6 @@
         private Panel buttonsPanel;
         private Button btnGeneratePoints;
         private Button btnClear;
-        private ToolStripMenuItem управлениеЭксперементамиToolStripMenuItem;
+        private ToolStripMenuItem dataManagementToolStripMenuItem;
     }
 }

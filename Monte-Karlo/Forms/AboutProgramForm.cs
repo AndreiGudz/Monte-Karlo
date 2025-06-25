@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿// Форма "О программе" - отображает информацию о версии приложения
+// и предоставляет ссылку на GitHub разработчика
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Monte_Karlo
 {
     public partial class AboutProgramForm : Form
     {
+        // Инициализирует форму и устанавливает текущую версию приложения
         public AboutProgramForm()
         {
             InitializeComponent();
@@ -21,11 +15,13 @@ namespace Monte_Karlo
             versionLabel.Text = $"Версия: {version.Major}.{version.Minor}.{version.Build}.{version.MinorRevision}";
         }
 
+        // Закрывает форму при нажатии на кнопку
         private void closeButton_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        // Открывает ссылку на GitHub разработчика в браузере по умолчанию
         private void githubLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try

@@ -1,0 +1,12 @@
+[
+	{ "s": "MAX", "p": [19] },
+	{ "s": "MIN", "p": [19] },
+	{ "s": "MIN/MAX", "p": [19] },
+	{ "s": "MM", "p": [14] },
+	{ "s": "MONTE", "p": [14, 13, 2] },
+	{ "s": "MONTE-KARLO", "p": [2] },
+	{ "s": "MONTE-KARLO.EXE", "p": [14, 13] },
+	{ "s": "MONTE-KARLO.RAR", "p": [14, 13] },
+	{ "s": "MONTECARLO_BACKUP_ГГГГММДД_ЧЧММСС", "p": [21] },
+	{ "s": "MONTECARLO_BACKUP_ГГГГММДД_ЧЧММСС.DB", "p": [21] }
+]

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -79,7 +80,10 @@ namespace Monte_Karlo
             catch (Exception ex)
             {
                 MessageBox.Show("Произошла ошибка из-за частой переотрисовки графика.\n" +
-                    "Пожалуйста, дайте время на переотрисовку графика", "Ошибка");
+                    "Пожалуйста, дайте время на переотрисовку графика",
+                    "Ошибка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 Thread.Sleep(100);
                 _view.RenderToBuffer(
                     paintPanel,
@@ -215,10 +219,10 @@ namespace Monte_Karlo
             }
         }
 
-        private void ShowException(Exception ex)
+        private void ShowException(Exception ex, string message = "")
         {
-            MessageBox.Show($"{ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            _logger.LogException(ex);
+            MessageBox.Show($"{message} {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            _logger.LogException(ex, message);
         }
 
         private void WriteResultOnLabels(double realSquare, double monteCarloSquare)
@@ -260,7 +264,21 @@ namespace Monte_Karlo
 
         private void programHelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Реализация справки
+            try
+            {
+                string helpFile = Path.Combine(Application.StartupPath, "Help", "index.htm");
+
+                // Открываем справку в браузере по умолчанию
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = helpFile,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                ShowException(ex, $"Не удалось открыть справку");
+            }
         }
 
         private void aboutProgramToolStripMenuItem_Click(object sender, EventArgs e)
@@ -326,7 +344,7 @@ namespace Monte_Karlo
             paintPanel.Invalidate();
         }
 
-        private void управлениеЭксперементамиToolStripMenuItem_Click(object sender, EventArgs e)
+        private void dataManagementToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {

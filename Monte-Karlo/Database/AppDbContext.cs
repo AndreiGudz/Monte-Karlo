@@ -13,9 +13,10 @@ namespace Monte_Karlo.DataBase
         public DbSet<CircleParams> CircleParams { get; set; }
         public DbSet<SimulationResult> SimulationResults { get; set; }
 
+        private string databasePath = "DataBase.db";
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string databasePath = "DataBase.db";
             optionsBuilder.UseSqlite($"Data Source={databasePath}");
             //optionsBuilder.LogTo(message => System.Diagnostics.Debug.WriteLine(message));
 
