@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿// Класс для хранения параметров окружности и линии
 namespace Monte_Karlo.Models
 {
     public class Circle
@@ -13,8 +8,10 @@ namespace Monte_Karlo.Models
         public Direction direction = Direction.horizontal;
         public float C = 2;
 
+        // Конструктор без параметров для создания окружности и линии с значениями по умолчанию
         public Circle() { }
 
+        // Конструктор для задания всех своих параметров
         public Circle(Point circleCenter, float radius, Direction direction, float c)
         {
             this.circleCenter = circleCenter;
@@ -25,6 +22,7 @@ namespace Monte_Karlo.Models
             this.C = c;
         }
 
+        // Сравнение на равенство для EF
         public override bool Equals(object obj)
         {
             return obj is Circle other &&
@@ -35,11 +33,13 @@ namespace Monte_Karlo.Models
                 C == other.C;
         }
 
+        // Генерация хэша для EF
         public override int GetHashCode()
         {
             return HashCode.Combine(circleCenter.X, circleCenter.Y, radius, direction, C);
         }
 
+        // Вывод всех параметров в стоку
         public override string ToString()
         {
             return $"CircleCenter: {circleCenter}, Radius: {radius}, Direction: {direction}, C: {C}";

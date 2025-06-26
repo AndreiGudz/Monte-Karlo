@@ -1,5 +1,4 @@
-using Monte_Karlo.DataBase;
-using Monte_Karlo.Models;
+// Класс, с точкой запуска приложения
 
 namespace Monte_Karlo
 {
@@ -14,6 +13,7 @@ namespace Monte_Karlo
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
+            // Защита от дублирования запуска приложения
             if (System.Diagnostics.Process.GetProcessesByName(System.Diagnostics.Process.GetCurrentProcess().ProcessName).Length > 1)
             {
                 MessageBox.Show(

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Статический класс для вычисление статистических характеристик выборки
 
 namespace Monte_Karlo.Utilites.Calculators
 {
     public static class StatisticCalculator
     {
+        // Медиана
         public static double CalculateMedian(List<double> values)
         {
             var sorted = values.OrderBy(x => x).ToList();
@@ -19,6 +16,7 @@ namespace Monte_Karlo.Utilites.Calculators
                 return sorted[count / 2];
         }
 
+        // Мода
         public static double CalculateMode(List<double> values)
         {
             return values.GroupBy(x => x)
@@ -46,9 +44,7 @@ namespace Monte_Karlo.Utilites.Calculators
             return CalculateStandardDeviation(CalculateVariance(values));
         }
 
+        // Размах выборки
         public static double CalculateRange(List<double> values) => values.Max() - values.Min();
-
-
-
     }
 }

@@ -1,18 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿// Форма для управления данными экспериментов: просмотр, резервное копирование,
+// удаление данных и генерация дополнительных экспериментов
 using Monte_Karlo.DataBase;
 using Monte_Karlo.Models;
-using Monte_Karlo.Utilites;
 using Monte_Karlo.Utilites.Calculators;
-using System;
-using System.Collections.Generic;
+using Monte_Karlo.Utilites;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
 
 namespace Monte_Karlo.Forms
@@ -23,16 +15,19 @@ namespace Monte_Karlo.Forms
         private Logger logger = new Logger();
         private CancellationTokenSource _cts;
 
+        // Инициализирует форму управления данными
         public DataManagementForm()
         {
             InitializeComponent();
         }
 
+        // Загружает список экспериментов при открытии формы
         private void DataManagementForm_Load(object sender, EventArgs e)
         {
             LoadExperiments();
         }
 
+        // Загружает список экспериментов из базы данных в DataGridView
         private void LoadExperiments()
         {
             try
@@ -69,6 +64,7 @@ namespace Monte_Karlo.Forms
             }
         }
 
+        // Создает резервную копию базы данных
         private void btnBackup_Click(object sender, EventArgs e)
         {
             using (var saveDialog = new SaveFileDialog())
@@ -96,6 +92,7 @@ namespace Monte_Karlo.Forms
             }
         }
 
+        // Удаляет все эксперименты из базы данных
         private void btnClearAll_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Вы уверены, что хотите удалить ВСЕ данные экспериментов? Это действие нельзя отменить.",
@@ -118,6 +115,7 @@ namespace Monte_Karlo.Forms
             }
         }
 
+        // Удаляет выбранный эксперимент из базы данных
         private void btnClearSelected_Click(object sender, EventArgs e)
         {
             if (dgvExperiments.SelectedRows.Count == 0)
@@ -149,6 +147,7 @@ namespace Monte_Karlo.Forms
             }
         }
 
+        // Открывает форму анализа для выбранного эксперимента
         private void btnanalysisOfResults_Click(object sender, EventArgs e)
         {
             if (dgvExperiments.SelectedRows.Count == 0)
@@ -164,6 +163,7 @@ namespace Monte_Karlo.Forms
             form.ShowDialog();
         }
 
+        // Сортирует данные по клику на заголовок колонки
         private void dgvExperiments_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (dgvExperiments.RowCount == 0)
@@ -189,6 +189,7 @@ namespace Monte_Karlo.Forms
                 SortOrder.Descending;
         }
 
+        // Выполняет сортировку данных по указанной колонке
         private void SortData(string columnName, ListSortDirection direction)
         {
             if (dgvExperiments.DataSource is BindingSource bindingSource)
@@ -251,8 +252,10 @@ namespace Monte_Karlo.Forms
             }
         }
 
+        // Генерирует 1000 экспериментов для выбранной конфигурации
         private async void btn1000Experiments_Click(object sender, EventArgs e)
         {
+            // Прерывание операции генерации экспериментов
             if (btn1000Experiments.Text == "Прервать")
             {
                 _cts?.Cancel();
@@ -268,7 +271,6 @@ namespace Monte_Karlo.Forms
 
             string originalButtonText = btn1000Experiments.Text;
             btn1000Experiments.Text = "Прервать";
-            IProgress<string> progress = new Progress<string>(s => lblStatus.Text = s);
 
             try
             {
@@ -280,19 +282,22 @@ namespace Monte_Karlo.Forms
                 var circle = new Circle(point, (float)circleParam.Radius, circleParam.Direction, (float)circleParam.C);
                 int pointsCount = circleParam.TotalPoints;
                 var pointsGenerator = new PointsGenerator();
-                int i = 0;
+
+                // Отображение прогресса генерации экспериментов
+                IProgress<string> progress = new Progress<string>(s => lblStatus.Text = s);
                 using Timer timer = new Timer();
-                timer.Interval = 100;
+                timer.Interval = 50;
+                int i = 0;
                 timer.Tick += (object? sender, EventArgs e) =>
                 {
                     progress.Report($"Генерация эксперимента {i + 1}/1000...");
                 };
                 timer.Start();
 
+                // Цикл с генерацией и сохранением результата
                 for (i = 0; i < 1000; i++)
                 {
                     token.ThrowIfCancellationRequested();
-                    progress.Report($"Генерация эксперимента {i + 1}/1000...");
 
                     await pointsGenerator.GenerateRandomPointsAsync(circle, pointsCount, token);
 
@@ -303,13 +308,15 @@ namespace Monte_Karlo.Forms
                         currentPoints.Points.Count,
                         currentPoints.CuttedPoints.Count);
 
-                    await Task.Run(() => 
+                    await Task.Run(() =>
                     databaseHelper.SaveResults(
                         circle,
                         currentPoints,
                         realSquare,
                         monteCarloSquare));
                 }
+
+                progress.Report($"Генерация эксперимента {i}/1000...");
                 timer.Stop();
                 MessageBox.Show("1000 экспериментов успешно сгенерированы!", "Готово");
             }
@@ -328,6 +335,7 @@ namespace Monte_Karlo.Forms
             }
         }
 
+        // Обеспечивает корректное завершение операций при закрытии формы
         private void DataManagementForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             _cts?.Cancel();

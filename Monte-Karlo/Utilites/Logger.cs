@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Класс ответственный за логирование сообщений и ошибок
 
 namespace Monte_Karlo.Utilites
 {
     public class Logger
     {
         private string logDir = Path.Combine(Application.StartupPath, "Logs");
+
+        // Метод для логирования сообщений
         public void Log(string message)
         {
             string logFile = Path.Combine(logDir, DateTime.Now.ToString("yyyy-MM-dd") + ".log");
@@ -31,6 +29,7 @@ namespace Monte_Karlo.Utilites
             }
         }
 
+        // Метод для логирования ошибок
         public void LogException(Exception exception, string message = "")
         {
             System.Diagnostics.Debug.WriteLine($"[ERROR] {message} {exception.Message}\n{exception.StackTrace}");

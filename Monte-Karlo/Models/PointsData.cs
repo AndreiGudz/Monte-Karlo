@@ -1,4 +1,6 @@
-﻿namespace Monte_Karlo.Models
+﻿// Класс для хранения сгенерированных и отфильтрованных точек
+
+namespace Monte_Karlo.Models
 {
     public class PointsData
     {

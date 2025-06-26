@@ -1,16 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Monte_Karlo.DataBase;
+﻿// Форма для отображения графического и статистического анализа результатов
+// метода Монте-Карло для вычисления площади сегмента круга
 using Monte_Karlo.Models;
-using Monte_Karlo.Utilites;
 using Monte_Karlo.Utilites.Calculators;
 using Monte_Karlo.Utilites.View;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace Monte_Karlo
 {
@@ -20,12 +13,14 @@ namespace Monte_Karlo
         private CircleParams _currentParams;
         private AnalysisView _view;
 
+        // Инициализирует форму анализа с пустыми параметрами
         public AnalysisForm()
         {
             InitializeComponent();
             _view = new AnalysisView();
         }
 
+        // Инициализирует форму анализа с заданными параметрами круга
         public AnalysisForm(CircleParams circleParams) : this()
         {
             if (circleParams is not null)
@@ -35,12 +30,14 @@ namespace Monte_Karlo
             }
         }
 
+        // Загружает данные и рассчитывает статистику при открытии формы
         private void AnalysisForm_Load(object sender, EventArgs e)
         {
             SetupDataGridView();
             CalculateStatistics();
         }
 
+        // Настраивает DataGridView для отображения результатов
         private void SetupDataGridView()
         {
             dataGridViewResults.Columns.Clear();
@@ -79,7 +76,7 @@ namespace Monte_Karlo
             }
         }
 
-        // Настраиваем цветовое форматирование для колонки с ошибкой
+        // Применяет цветовое форматирование для ячеек с относительной ошибкой
         private void DataGridViewResults_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
         {
             {
@@ -96,6 +93,7 @@ namespace Monte_Karlo
             };
         }
 
+        // Добавляет колонку в DataGridView с заданными параметрами
         private void AddColumn(string name, string header, string dataPropertyName, bool isReadOnly, string format,
                                object defaultValue = null, DataGridViewAutoSizeColumnMode AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells)
         {
@@ -122,6 +120,7 @@ namespace Monte_Karlo
             dataGridViewResults.Columns.Add(col);
         }
 
+        // Обрабатывает клик по заголовку колонки для сортировки данных
         private void DataGridViewResults_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             DataGridViewColumn column = dataGridViewResults.Columns[e.ColumnIndex];
@@ -144,6 +143,7 @@ namespace Monte_Karlo
                 SortOrder.Descending;
         }
 
+        // Сортирует данные в DataGridView по указанной колонке
         private void SortData(string columnName, ListSortDirection direction)
         {
             if (dataGridViewResults.DataSource is BindingSource bindingSource)
@@ -191,6 +191,7 @@ namespace Monte_Karlo
             }
         }
 
+        // Рассчитывает и отображает статистические показатели
         private void CalculateStatistics()
         {
             if (_results == null || _results.Count == 0)
@@ -213,10 +214,10 @@ namespace Monte_Karlo
             lblRange.Text = StatisticCalculator.CalculateRange(mcResults).ToString("F4");
         }
 
+        // Отрисовывает графическое представление анализа
         private void paintPanel_Paint(object sender, PaintEventArgs e)
         {
             _view.RenderAnalysis(paintPanel, e, _currentParams);
-
             base.OnPaint(e);
         }
     }

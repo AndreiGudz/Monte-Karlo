@@ -1,20 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿// Класс, описывающий базу данных, подключение к ней, таблицы и их структуру
+
+using Microsoft.EntityFrameworkCore;
 using Monte_Karlo.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Monte_Karlo.DataBase
 {
     public class AppDbContext : DbContext
     {
+        // Таблица с параметрами окружности, для которой проводят эксперементы
         public DbSet<CircleParams> CircleParams { get; set; }
+
+        // Таблица с результатами эксперементов
         public DbSet<SimulationResult> SimulationResults { get; set; }
 
         private string databasePath = "DataBase.db";
 
+        // Указание для EF Core, что будет использоваться SQLite
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite($"Data Source={databasePath}");
@@ -22,6 +23,7 @@ namespace Monte_Karlo.DataBase
 
         }
 
+        // Создание индекса для CircleParams
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CircleParams>()

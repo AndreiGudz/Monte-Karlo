@@ -1,23 +1,20 @@
-﻿using Monte_Karlo.Models;
-using System;
+﻿// Класс для генерации случайных точек и вычисления их принадлежности кругу и сегменту
+using Monte_Karlo.Models;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Monte_Karlo.Utilites
 {
     public class PointsGenerator
     {
-        private readonly Mutex _mutex = new();
-        private PointsData _currentPoints = new();
+        private readonly Mutex _mutex = new();  // Мьютекс для потокобезопасного доступа
+        private PointsData _currentPoints = new();  // Текущий набор точек
 
+        // Генерирует новые случайные точки и вычисляет их принадлежность
         public async Task GenerateRandomPointsAsync(Circle circle, int count, CancellationToken token)
         {
             try
             {
-                _mutex.WaitOne();
+                _mutex.WaitOne();  // Блокировка для потокобезопасности
                 token.ThrowIfCancellationRequested();
 
                 var newPoints = new PointsData();
@@ -33,21 +30,27 @@ namespace Monte_Karlo.Utilites
                         MaxDegreeOfParallelism = Environment.ProcessorCount
                     };
 
+                    // Генерация точек
                     GeneratePoints(newPoints, count, radius, parallelOptions);
                     token.ThrowIfCancellationRequested();
+
+                    // Вычисление точек внутри круга
                     CalculateIncludedPoints(newPoints, radius, parallelOptions);
                     token.ThrowIfCancellationRequested();
+
+                    // Вычисление точек в сегменте
                     CalculateCuttedPoints(newPoints, circle, parallelOptions);
                 }, token);
 
-                _currentPoints = newPoints;
+                _currentPoints = newPoints;  // Сохранение результатов
             }
             finally
             {
-                _mutex.ReleaseMutex();
+                _mutex.ReleaseMutex();  // Освобождение блокировки
             }
         }
 
+        // Пересчитывает точки в сегменте для существующего набора точек
         public async Task CalculateCuttedPointsAsync(Circle circle, int count, CancellationToken token)
         {
             if (_currentPoints.Points.Count == 0)
@@ -60,7 +63,6 @@ namespace Monte_Karlo.Utilites
             {
                 _mutex.WaitOne();
                 token.ThrowIfCancellationRequested();
-
 
                 await Task.Run(() =>
                 {
@@ -78,16 +80,19 @@ namespace Monte_Karlo.Utilites
             }
         }
 
+        // Очищает текущий набор точек
         public void ClearPoints()
         {
             _currentPoints = new PointsData();
         }
 
+        // Возвращает текущий набор точек
         public PointsData GetCurrentPoints()
         {
             return _currentPoints;
         }
 
+        // Генерирует случайные точки в квадрате [-radius, radius] x [-radius, radius]
         private static void GeneratePoints(PointsData pointsData, int count, float radius, ParallelOptions parallelOptions)
         {
             var random = new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
@@ -103,6 +108,7 @@ namespace Monte_Karlo.Utilites
             pointsData.Points = points.ToList();
         }
 
+        // Фильтрует точки, попавшие внутрь круга
         private static void CalculateIncludedPoints(PointsData pointsData, float radius, ParallelOptions parallelOptions)
         {
             float radiusSquared = radius * radius;
@@ -121,6 +127,7 @@ namespace Monte_Karlo.Utilites
             pointsData.IncludedPoints = includedPoints.ToList();
         }
 
+        // Фильтрует точки, попавшие в заданный сегмент круга
         private static void CalculateCuttedPoints(PointsData pointsData, Circle circle, ParallelOptions parallelOptions)
         {
             if (pointsData.IncludedPoints.Count == 0)

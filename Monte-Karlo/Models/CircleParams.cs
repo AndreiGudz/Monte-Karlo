@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Таблица с параметрами окружности, для которой проводят эксперементы
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Monte_Karlo.Models
 {
@@ -20,8 +16,10 @@ namespace Monte_Karlo.Models
         public int TotalPoints { get; set; }
         public double AnalyticalResult { get; set; }
 
+        // Связь с результатами эксперементов с такими параметрами
         public List<SimulationResult> Results { get; set; } = new List<SimulationResult>();
 
+        // Вывод всех параметров в стоку
         public override string ToString()
         {
             return $"""

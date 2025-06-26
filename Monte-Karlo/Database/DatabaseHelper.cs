@@ -1,23 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿// Класс, ответственный за взаимодействие остального приложения с базой данных
+using Microsoft.EntityFrameworkCore;
 using Monte_Karlo.Models;
 using Monte_Karlo.Utilites;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Monte_Karlo.DataBase
 {
     public class DatabaseHelper
     {
         private Logger logger;
+
+        // Инициализирует помощник базы данных и проверяет подключение
         public DatabaseHelper()
         {
             logger = new Logger();
             InitializeDatabase();
         }
 
+        // Инициализирует базу данных, если она еще не создана
         public void InitializeDatabase()
         {
             using var context = new AppDbContext();
@@ -27,6 +26,7 @@ namespace Monte_Karlo.DataBase
             logger.Log("Создание базы данных");
         }
 
+        // Полностью очищает базу данных (удаляет и создает заново)
         public void ClearDatabase()
         {
             using (var context = new AppDbContext())
@@ -37,6 +37,7 @@ namespace Monte_Karlo.DataBase
             logger.Log("Очистка базы данных");
         }
 
+        // Сохраняет результаты расчета в базу данных
         public void SaveResults(Circle circle, PointsData pointsData, double analyticalResult, double monteCarloResult)
         {
             using var context = new AppDbContext();
@@ -44,6 +45,7 @@ namespace Monte_Karlo.DataBase
             int pointsInCircle = pointsData.IncludedPoints.Count;
             int pointsInSegment = pointsData.CuttedPoints.Count;
 
+            // Поиск существующей записи с такими параметрами
             var circleParams = context.CircleParams
                 .Include(cp => cp.Results)
                 .FirstOrDefault(cp =>
@@ -54,6 +56,7 @@ namespace Monte_Karlo.DataBase
                     cp.C == circle.C &&
                     cp.TotalPoints == totalPoints);
 
+            // Создание новой записи, если не найдена существующая
             if (circleParams == null)
             {
                 circleParams = new CircleParams
@@ -69,6 +72,7 @@ namespace Monte_Karlo.DataBase
                 context.CircleParams.Add(circleParams);
             }
 
+            // Создание записи с результатами расчета
             var result = new SimulationResult
             {
                 CircleParams = circleParams,
@@ -82,6 +86,7 @@ namespace Monte_Karlo.DataBase
             logger.Log($"Сохранение:\n{circleParams}\n{result}");
         }
 
+        // Получает параметры круга и результаты по заданным параметрам
         public CircleParams GetData(Circle circle, int totalPoints)
         {
             using var context = new AppDbContext();
@@ -97,6 +102,7 @@ namespace Monte_Karlo.DataBase
             return query.FirstOrDefault();
         }
 
+        // Получает параметры круга и результаты по ID
         public CircleParams GetDataById(int selectedId)
         {
             using var context = new AppDbContext();
@@ -106,6 +112,7 @@ namespace Monte_Karlo.DataBase
             return result;
         }
 
+        // Получает все данные экспериментов из базы
         public List<CircleParams> GetAllData()
         {
             using var context = new AppDbContext();
@@ -115,6 +122,7 @@ namespace Monte_Karlo.DataBase
             return results;
         }
 
+        // Удаляет эксперимент по его ID
         public void RemoveCircleParamsById(int selectedId)
         {
             using var context = new AppDbContext();
@@ -130,7 +138,8 @@ namespace Monte_Karlo.DataBase
             logger.Log($"Удаление:\n{experiment}");
         }
 
-        public string CreateBackup(string fileName) 
+        // Создает резервную копию базы данных
+        public string CreateBackup(string fileName)
         {
             var currentDirectory = Directory.GetCurrentDirectory();
             var sourcePath = Path.Combine(currentDirectory, "DataBase.db");

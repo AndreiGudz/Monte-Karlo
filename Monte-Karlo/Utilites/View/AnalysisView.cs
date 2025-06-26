@@ -1,13 +1,7 @@
-﻿using Monte_Karlo.Models;
+﻿// Класс для визуализации результатов анализа метода Монте-Карло
+// Отрисовывает графики, точки и статистические показатели на панели
+using Monte_Karlo.Models;
 using Monte_Karlo.Utilites.Calculators;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Monte_Karlo.Utilites.View
 {
@@ -27,6 +21,7 @@ namespace Monte_Karlo.Utilites.View
         private static readonly Brush _textBrush = Brushes.Black;
         private static readonly float _pointRadius = 4;
 
+        // Основной метод отрисовки анализа на панели
         public void RenderAnalysis(Panel panel, PaintEventArgs e, CircleParams circleParams)
         {
             var g = e.Graphics;
@@ -41,6 +36,7 @@ namespace Monte_Karlo.Utilites.View
             OnPaint(panel, g, circleParams);
         }
 
+        // Обрабатывает событие отрисовки, вычисляет статистику и вызывает методы рисования
         private void OnPaint(Panel panel, Graphics g, CircleParams circleParams)
         {
             List<double> mcResults = circleParams.Results.Select(r => r.MonteCarloResult).ToList();
@@ -61,7 +57,6 @@ namespace Monte_Karlo.Utilites.View
             yRange = yMax - yMin;
 
             DrawGrid(g, plotArea, mcResults.Count, yMin, yMax);
-
             DrawAnalyticalLine(g, plotArea, analyticalValue, yMin, yRange);
             DrawMonteCarloPoints(g, plotArea, mcResults, yMin, yRange);
             DrawMeanLine(g, plotArea, mean, yMin, yRange);
@@ -70,6 +65,7 @@ namespace Monte_Karlo.Utilites.View
             DrawLegend(g, plotArea, median);
         }
 
+        // Рисует координатную сетку с подписями осей
         private void DrawGrid(Graphics g, Rectangle plotArea, int pointsCount, double yMin, double yMax)
         {
             Pen girdPen = new Pen(_gridColor);
@@ -113,15 +109,16 @@ namespace Monte_Karlo.Utilites.View
 
                 g.DrawString(text, _textFont, _textBrush, textX, textY);
             }
-
         }
 
+        // Рисует линию аналитического решения
         private void DrawAnalyticalLine(Graphics g, Rectangle area, double value, double yMin, double yRange)
         {
             float y = area.Bottom - (float)((value - yMin) / yRange * area.Height);
             g.DrawLine(new Pen(_analyticalColor, 4), area.Left, y, area.Right, y);
         }
 
+        // Рисует точки результатов метода Монте-Карло
         private void DrawMonteCarloPoints(Graphics g, Rectangle area, List<double> results, double yMin, double yRange)
         {
             if (results == null || results.Count == 0)
@@ -159,6 +156,7 @@ namespace Monte_Karlo.Utilites.View
             }
         }
 
+        // Рисует линию среднего значения
         private void DrawMeanLine(Graphics g, Rectangle area, double value, double yMin, double yRange)
         {
             float y = area.Bottom - (float)((value - yMin) / yRange * area.Height);
@@ -166,6 +164,7 @@ namespace Monte_Karlo.Utilites.View
                       area.Left, y, area.Right, y);
         }
 
+        // Рисует линию медианного значения
         private void DrawMedianLine(Graphics g, Rectangle area, double value, double yMin, double yRange)
         {
             float y = area.Bottom - (float)((value - yMin) / yRange * area.Height);
@@ -173,6 +172,7 @@ namespace Monte_Karlo.Utilites.View
                       area.Left, y, area.Right, y);
         }
 
+        // Рисует линии минимального и максимального значений
         private void DrawMinMaxLines(Graphics g, Rectangle area, double min, double max, double yMin, double yRange)
         {
             float yMinPos = area.Bottom - (float)((min - yMin) / yRange * area.Height);
@@ -182,6 +182,7 @@ namespace Monte_Karlo.Utilites.View
             g.DrawLine(new Pen(_minMaxColor, 3), area.Left, yMaxPos, area.Right, yMaxPos);
         }
 
+        // Рисует легенду графика
         private void DrawLegend(Graphics g, Rectangle area, double mode)
         {
             SizeF textSize = g.MeasureString("Аналитическое решение", _textFont);
@@ -197,6 +198,7 @@ namespace Monte_Karlo.Utilites.View
             DrawLegendItem(g, "Минимум/Максимум", _minMaxColor, startX, startY + itemHeight * 4, boxWidth, itemHeight);
         }
 
+        // Рисует один элемент легенды (цветной прямоугольник + текст)
         private void DrawLegendItem(Graphics g, string text, Color color, float x, float y, float boxWidth, float boxHeight)
         {
             SizeF textSize = g.MeasureString("Аналитическое решение", _textFont);

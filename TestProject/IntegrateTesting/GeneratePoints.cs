@@ -23,7 +23,7 @@ namespace TestProject.IntegrateTesting
         private Circle circle = new Circle();
         private int pointsCount = 100_000;
 
-        // Проверка корректности результата при стартовых параметрах
+        // Проверка корректности результата при стартовых параметрах окружности по умолчанию
         [TestMethod]
         public void GeneratePoints_CheckCorrectWorkWithStartParametrs_ReturnCorrectResult()
         {
@@ -44,7 +44,7 @@ namespace TestProject.IntegrateTesting
             var roundedMonteCarloSquare = Math.Round(monteCarloSquare, 4);
 
             // Assert
-            Assert.AreEqual(expectedRealSquer, realSquare, 0.001);
+            Assert.AreEqual(expectedRealSquer, realSquare, 0.0001);
             Assert.AreEqual(realSquare, monteCarloSquare, expectedDelta);
         }
 
@@ -61,14 +61,15 @@ namespace TestProject.IntegrateTesting
                 MaxDegreeOfParallelism = Environment.ProcessorCount
             };
 
-            LocalGeneratePoints(newPoints, count, radius, parallelOptions);
+            GeneratePoints(newPoints, count, radius, parallelOptions);
             CalculateIncludedPoints(newPoints, radius, parallelOptions);
             CalculateCuttedPoints(newPoints, circle, parallelOptions);
 
             return newPoints;
         }
 
-        private static void LocalGeneratePoints(PointsData pointsData, int count, float radius, ParallelOptions parallelOptions)
+        // Генерация случайных точек
+        private static void GeneratePoints(PointsData pointsData, int count, float radius, ParallelOptions parallelOptions)
         {
             var random = new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
 
@@ -83,6 +84,7 @@ namespace TestProject.IntegrateTesting
             pointsData.Points = points.ToList();
         }
 
+        // Фильтрация точек, попавших в окружность
         private static void CalculateIncludedPoints(PointsData pointsData, float radius, ParallelOptions parallelOptions)
         {
             float radiusSquared = radius * radius;
@@ -101,6 +103,7 @@ namespace TestProject.IntegrateTesting
             pointsData.IncludedPoints = includedPoints.ToList();
         }
 
+        // Фильтрация точек, попавших в больший сегмент окружности
         private static void CalculateCuttedPoints(PointsData pointsData, Circle circle, ParallelOptions parallelOptions)
         {
             if (pointsData.IncludedPoints.Count == 0)

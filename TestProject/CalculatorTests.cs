@@ -10,6 +10,7 @@ namespace TestProject
     [TestClass]
     public class CalculatorTests
     {
+        // Проверяем правильность вычисления площади круга
         [TestMethod]
         public void CircleSuare_CalculatesCorrectArea()
         {
@@ -24,6 +25,7 @@ namespace TestProject
             Assert.AreEqual(expected, result);
         }
 
+        // Проверяем правильность вычисления метод Монте-Карло
         [TestMethod]
         public void CalculateMonteCarloArea_ReturnsCorrectValue()
         {
@@ -40,6 +42,7 @@ namespace TestProject
             Assert.AreEqual(expected, result);
         }
 
+        // Проверяем правильность вычисления абсолютной погрешности
         [TestMethod]
         public void CalculateAbsoluteError_ReturnsCorrectValue()
         {
@@ -55,6 +58,7 @@ namespace TestProject
             Assert.AreEqual(expectedError, result, 0.0001);
         }
 
+        // Проверяем правильность вычисления относительной погрешности
         [TestMethod]
         public void CalculateRelativeError_ReturnsCorrectPercentage()
         {
@@ -70,6 +74,7 @@ namespace TestProject
             Assert.AreEqual(expectedError, result, 0.0001);
         }
 
+        // Проверяем реакцию вычисления погрешности при некорректных значениях
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void CalculateRelativeError_ThrowsForZeroExpected()
@@ -82,6 +87,7 @@ namespace TestProject
             Calculator.CalculateRelativeError(expected, actual);
         }
 
+        // Проверяем правильность округления до двух значащих цифр
         [TestMethod]
         public void RoundToTwoSignificantDigits_RoundsCorrectly()
         {
@@ -100,6 +106,7 @@ namespace TestProject
             Assert.AreEqual(expected2, result2);
         }
 
+        // Проверяем вычисление площади, когда секущая линия вне окружности
         [TestMethod]
         public void CalculateAnalyticArea_HorizontalCut_ReturnsFullCircleWhenLineOutside()
         {
@@ -114,6 +121,7 @@ namespace TestProject
             Assert.AreEqual(expected, result, 0.0001);
         }
 
+        // Проверяем вычисление площади, когда секущая линия проходит через центр окружности
         [TestMethod]
         public void CalculateAnalyticArea_VerticalCut_ReturnsHalfCircleWhenLineThroughCenter()
         {
@@ -128,6 +136,8 @@ namespace TestProject
             Assert.AreEqual(expected, result, 0.0001);
         }
 
+        // Проверяем правильность вычисление площади большей секции окружности разделённой секущей линией
+        // параллельной оси OX
         [TestMethod]
         public void CalculateAnalyticArea_HorizontalCut_ReturnsCorrectSegmentArea()
         {
@@ -144,6 +154,7 @@ namespace TestProject
             Assert.AreEqual(expected, result, 0.0001);
         }
 
+        // Проверяем рекцию вычисления площади при некорректных значениях
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void CalculateAnalyticArea_ThrowsForZeroRadius()
