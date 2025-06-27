@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Monte_Karlo.Models;
 using System.Drawing;
 
-namespace TestProject
+namespace TestProject.Models
 {
     [TestClass]
     public class PointsDataTests

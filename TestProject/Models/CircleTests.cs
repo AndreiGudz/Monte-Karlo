@@ -3,7 +3,7 @@ using Monte_Karlo.Models;
 using System;
 using System.Drawing;
 
-namespace TestProject
+namespace TestProject.Models
 {
     [TestClass]
     public class CircleTests

@@ -3,7 +3,7 @@ using Monte_Karlo.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace TestProject
+namespace TestProject.Models
 {
     [TestClass]
     public class CircleParamsTests

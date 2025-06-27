@@ -2,7 +2,7 @@
 using Monte_Karlo.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace TestProject
+namespace TestProject.Models
 {
     [TestClass]
     public class SimulationResultTests
@@ -29,7 +29,7 @@ namespace TestProject
             Assert.AreEqual(2, result.CircleParamsId);
         }
 
-        
+
         // Проверяет возможность установки и получения связанного объекта CircleParams
         [TestMethod]
         public void SimulationResult_CircleParams_CanBeSet()
@@ -46,7 +46,7 @@ namespace TestProject
             Assert.AreEqual(1, result.CircleParams.Id);
         }
 
-        
+
         // Проверяет, что метод ToString возвращает строку с ожидаемым форматом и данными
         [TestMethod]
         public void SimulationResult_ToString_ReturnsCorrectFormat()
